@@ -1,0 +1,102 @@
+﻿<Window x:Class="VMMC_Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:uc="clr-namespace:VMMC_Core.CommonControls;assembly=VMMC_Core"
+        mc:Ignorable="d"
+        Title="VMMC_Client" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Editor" >
+                    <!--Click="ShowEditor_Click"-->
+                </MenuItem>
+                <MenuItem Header="Loader"/>
+                <Separator/>
+                <MenuItem Header="Logout" Click="Logout_Click"/>
+            </MenuItem>
+        </Menu>
+        <TabControl Grid.Row="1" Margin="0" TabStripPlacement="Left">
+            <TabItem VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0">
+                <TabItem.Header>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                        <TextBlock Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            Дерево
+                            <TextBlock.LayoutTransform>
+                                <RotateTransform Angle="-90"/>
+                            </TextBlock.LayoutTransform>
+                        </TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="43*"/>
+                        <RowDefinition Height="162*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" MinWidth="250" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" MinWidth="250" />
+                    </Grid.ColumnDefinitions>
+                    <TreeView x:Name="treeview1" Grid.Column="0" TreeViewItem.Expanded="treeViewItem_Expanded" TreeViewItem.Selected="treeViewItem_Selected" Grid.RowSpan="2">
+                        <TextBox Margin="5" FontSize="14" FontWeight="Bold">
+                            Дерево
+                        </TextBox>
+                    </TreeView>
+
+                    <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ShowsPreview="False" Width="3" HorizontalAlignment="Center" />
+
+                    <Grid Grid.Column="2" Grid.RowSpan="2"/>
+
+                    <GridSplitter Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" ShowsPreview="False" Width="3" HorizontalAlignment="Center" />
+
+                    <uc:DocumentView Grid.Column="3" x:Name="DocumentViewControl" Grid.ColumnSpan="2" Margin="3,0,0,0" Grid.RowSpan="2"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0">
+                <TabItem.Header>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <!--<Ellipse Width="10" Height="10" Fill="DarkGray"/>-->
+                        <TextBlock Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            Отчеты
+                            <TextBlock.LayoutTransform>
+                                <RotateTransform Angle="-90"/>
+                            </TextBlock.LayoutTransform>
+                        </TextBlock>
+
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" MinWidth="250" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TreeView Grid.Column="0" x:Name="ReportTreeView" TreeViewItem.Selected="ReportTreeView_Selected">
+                        <TreeViewItem Header="Отчеты">
+                            <TreeViewItem Header="РД-Тег"/>
+                            <TreeViewItem Header="РД-3D"/>
+                            <TreeViewItem Header="Документы по типам"/>
+                        </TreeViewItem>
+                    </TreeView>
+
+                    <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+
+                    <Grid Grid.Column="2">
+                        <uc:Report_PiChartView Grid.Row="1" x:Name="Report_PiChartView" Grid.Column="2"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

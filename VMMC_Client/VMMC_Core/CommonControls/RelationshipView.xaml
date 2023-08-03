@@ -1,0 +1,194 @@
+﻿<UserControl x:Class="VMMC_Core.CommonControls.RelationshipView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VMMC_Core.CommonControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <StackPanel>
+            <Expander Header="Комплекты" >
+                <DataGrid Margin="5" AutoGenerateColumns="False" HeadersVisibility="None" HorizontalGridLinesBrush="Transparent" VerticalGridLinesBrush="Transparent"
+                                    RowBackground="Transparent" CanUserAddRows="False" ItemsSource ="{Binding RelatedeComplektObjectsCollection}" IsReadOnly="True" BorderBrush="Transparent" Background="Transparent">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn  Binding="{Binding ComplektCode}"/>
+                    </DataGrid.Columns>
+                </DataGrid>                    
+                <Expander.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelatedeComplektObjectsCollection.Count}" Value="0">
+                                <Setter Property="TextBlock.Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Expander.Style>
+            </Expander>
+            
+            <Expander Header="Документы" >
+                <DataGrid Margin="5" AutoGenerateColumns="False" HeadersVisibility="None" HorizontalGridLinesBrush="Transparent" VerticalGridLinesBrush="Transparent"
+                                    RowBackground="Transparent" CanUserAddRows="False" ItemsSource ="{Binding RelatedeDocumentObjectsCollection}" IsReadOnly="True" BorderBrush="Transparent" Background="Transparent">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn  Binding="{Binding DocumentCode}"/>
+                        <!--<DataGridTextColumn  Binding="{Binding DocumentName}"/>
+                        <DataGridTextColumn  Binding="{Binding DocumentClassId}"/>-->
+
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Expander.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelatedeDocumentObjectsCollection.Count}" Value="0">
+                                <Setter Property="TextBlock.Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Expander.Style>
+            </Expander>
+            
+            <Expander Header="Теги" >
+                <DataGrid ItemsSource ="{Binding RelatedeTagObjectsCollection}"/>
+                <Expander.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelatedeTagObjectsCollection.Count}" Value="0">
+                                <Setter Property="TextBlock.Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Expander.Style>
+            </Expander>
+            
+            <Expander Header="Организации" >
+                <DataGrid ItemsSource ="{Binding RelatedeOrganisationObjectsCollection}"/>
+                <Expander.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelatedeOrganisationObjectsCollection.Count}" Value="0">
+                                <Setter Property="TextBlock.Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Expander.Style>
+            </Expander>
+            
+            <Expander Header="Прочие" >                    
+                <DataGrid ItemsSource ="{Binding RelatedeOtherObjectsCollection}"/>
+                <Expander.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelatedeOtherObjectsCollection.Count}" Value="0">
+                                <Setter Property="TextBlock.Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Expander.Style>
+            </Expander>
+
+            <!--<TreeView x:Name="RelatedObjects_Tree" Background="Transparent" BorderBrush="Transparent">
+
+                <TreeViewItem Header="Комплекты" >
+
+                    <ItemsControl ItemsSource="{Binding RelatedeComplektObjectsCollection}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ObjectCode}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TreeViewItem.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelatedeComplektObjectsCollection.Count}" Value="0">
+                                    <Setter Property="TextBlock.Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TreeViewItem.Style>
+                </TreeViewItem>
+
+
+                <TreeViewItem Header="Документы"  >
+                    <ItemsControl ItemsSource="{Binding RelatedeDocumentObjectsCollection}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ObjectCode}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TreeViewItem.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelatedeDocumentObjectsCollection.Count}" Value="0">
+                                    <Setter Property="TextBlock.Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TreeViewItem.Style>
+                </TreeViewItem>
+
+
+                <TreeViewItem Header="Теги"  >
+                    <ItemsControl ItemsSource="{Binding RelatedeTagObjectsCollection}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ObjectCode}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TreeViewItem.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelatedeTagObjectsCollection.Count}" Value="0">
+                                    <Setter Property="TextBlock.Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TreeViewItem.Style>
+                </TreeViewItem>
+
+
+                <TreeViewItem Header="Организации" DataContextChanged="TreeViewItem_DataContextChanged" >
+                    <ItemsControl ItemsSource="{Binding RelatedeOrganisationObjectsCollection}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ObjectName}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TreeViewItem.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelatedeOrganisationObjectsCollection.Count}" Value="0">
+                                    <Setter Property="TextBlock.Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TreeViewItem.Style>
+                </TreeViewItem>
+
+                <TreeViewItem Header="Прочие"  >
+                    <ItemsControl ItemsSource="{Binding RelatedeOtherObjectsCollection}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ObjectCode}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TreeViewItem.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelatedeOtherObjectsCollection.Count}" Value="0">
+                                    <Setter Property="TextBlock.Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TreeViewItem.Style>
+                </TreeViewItem>
+
+            </TreeView>-->
+        </StackPanel>
+    </Grid>
+</UserControl>

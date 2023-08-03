@@ -1,0 +1,234 @@
+﻿<Window x:Class="VMMC_Import.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VMMC_Import"
+        mc:Ignorable="d"        
+        xmlns:uc="clr-namespace:VMMC_Core.CommonControls;assembly=VMMC_Core"
+        Title="Импорт данных" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="FileParser" Command="{Binding ExecuteFileParserComand}"/>
+                <MenuItem Header="ExcelParser" Command="{Binding ExecuteExcelParserComand}"/>
+                <MenuItem Header="DataBaseParser" Command="{Binding ExecuteDataBaseParserComand}"/>
+                <MenuItem Header="PDFParser" Command="{Binding ExecutePDFParserComand}"/>
+                <Separator/>
+                <MenuItem Header="Открыть" Command="{Binding OpenSavedDataComand}" IsEnabled="True"/>
+                <MenuItem Header="Сохранить" IsEnabled="False" />
+                <Separator/>
+                <MenuItem Header="Logout" Click="Logout_Click"/>
+            </MenuItem>
+        </Menu>
+                
+        <TabControl Grid.Row="1" Margin="0" TabStripPlacement="Left">
+            
+            
+            <TabItem VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0">
+                <TabItem.Header>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <!--<Ellipse Width="10" Height="10" Fill="DarkGray"/>-->
+                        <TextBlock Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            Загрузка
+                            <TextBlock.LayoutTransform>
+                                <RotateTransform Angle="-90"/>
+                            </TextBlock.LayoutTransform>
+                        </TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ScrollViewer Grid.Row="0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Complekts:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="IsComplektsUpload_CheckBox" IsChecked="{Binding IsNeedUploadComplekts}" VerticalAlignment="Center"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Documents:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <CheckBox Grid.Row="1" Grid.Column="1" x:Name="IsDocumentsUpload_CheckBox" IsChecked="{Binding IsNeedUploadDocuments}" VerticalAlignment="Center"/>
+                                <Label Grid.Row="2" Grid.Column="0" Content="Revisions:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <CheckBox Grid.Row="2" Grid.Column="1" x:Name="IsRevisionsUpload_CheckBox" IsChecked="{Binding IsNeedUploadRevisions}" VerticalAlignment="Center"/>
+                                <Label Grid.Row="3" Grid.Column="0" Content="Files:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <CheckBox Grid.Row="3" Grid.Column="1" x:Name="IsFilesUpload_CheckBox" IsChecked="{Binding IsNeedUploadFiles}" VerticalAlignment="Center"/>
+                                <Label Grid.Row="4" Grid.Column="0" Content="Tags:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <CheckBox Grid.Row="4" Grid.Column="1" x:Name="IsTagsUpload_CheckBox" IsChecked="{Binding IsNeedUploadTags}" VerticalAlignment="Center"/>
+                                <Label Grid.Row="5" Grid.Column="0" Content="Relationships:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <CheckBox Grid.Row="5" Grid.Column="1" x:Name="IsRelationshipsUpload_CheckBox" IsChecked="{Binding IsNeedUploadRelationships}"  VerticalAlignment="Center"/>
+                                <Label Grid.Row="6" Grid.Column="0" Content="TreeItems:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <CheckBox Grid.Row="6" Grid.Column="1" x:Name="IsTreeItemsUpload_CheckBox" IsChecked="{Binding IsNeedUploadTreeItems}" VerticalAlignment="Center"/>
+                                <Label Grid.Row="7" Grid.Column="0" Content="Attributes:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <CheckBox Grid.Row="7" Grid.Column="1" x:Name="IsAttributesUpload_CheckBox" IsChecked="{Binding IsNeedUploadAttributes}"  VerticalAlignment="Center"/>
+                            </Grid>
+                        </ScrollViewer>
+                        
+
+                        <StackPanel Grid.Row="1">
+                            <Button x:Name="Upload_Button" Content="Начать загрузку" Command="{Binding StartAsyncImportComand}" Margin="5" Width="100"/>
+                        </StackPanel>
+                    </Grid>
+                    <TabControl Grid.Column="0"  TabStripPlacement="Bottom">
+                        <!--<TabItem Header="Objects">
+                            <DataGrid x:Name="ObjectDataGrid" ItemsSource="{Binding ObjCollection}"/>
+                        </TabItem>-->
+                        <TabItem Header="Complekts">
+                            <DataGrid x:Name="ComplektDataGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource="{Binding ComplektsCollection}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ComplektId" Binding="{Binding ComplektId}" Width="*" />
+                                    <DataGridTextColumn Header="ComplektCode" Binding="{Binding ComplektCode}" Width="*" />
+                                    <DataGridTextColumn Header="ComplektName" Binding="{Binding ComplektName}" Width="*" />
+                                    <DataGridTextColumn Header="ComplektClassId" Binding="{Binding ComplektClassId}" Width="*" />
+                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*" />
+                                    <DataGridTextColumn Header="StatusInfo" Binding="{Binding StatusInfo}" Width="*" />
+                                    <DataGridCheckBoxColumn Header="IsExistInDB" Binding="{Binding IsExistInDB}" Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            
+                        </TabItem>
+                        <TabItem Header="Documents">
+                            <DataGrid x:Name="DocumentDataGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource="{Binding DocumentsCollection}" >
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="DocumentId" Binding="{Binding DocumentId}" Width="*" />
+                                    <DataGridTextColumn Header="DocumentName" Binding="{Binding DocumentName}" Width="*" />
+                                    <DataGridTextColumn Header="DocumentCode" Binding="{Binding DocumentCode}" Width="*" />
+                                    <DataGridTextColumn Header="DocumentClassId" Binding="{Binding DocumentClassId}" Width="*" />
+                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*" />
+                                    <DataGridTextColumn Header="StatusInfo" Binding="{Binding StatusInfo}" Width="*" />
+                                    <DataGridCheckBoxColumn Header="IsExistInDB" Binding="{Binding IsExistInDB}" Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                        <TabItem Header="Revisions">
+                            <DataGrid x:Name="RevisionDataGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource="{Binding RevisionsCollection, UpdateSourceTrigger=PropertyChanged}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="RevisionId" Binding="{Binding RevisionId}" Width="*" />
+                                    <DataGridTextColumn Header="DocumentId" Binding="{Binding DocumentId}" Width="*" />
+                                    <DataGridTextColumn Header="Number" Binding="{Binding Number}" Width="*" />
+                                    <DataGridTextColumn Header="RevisionDate" Binding="{Binding RevisionDate}" Width="*" />
+                                    <DataGridCheckBoxColumn Header="IsCurrent" Binding="{Binding IsCurrent}" Width="*" />
+                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*" />
+                                    <DataGridTextColumn Header="StatusInfo" Binding="{Binding StatusInfo}" Width="*" />
+                                    <DataGridCheckBoxColumn Header="IsExistInDB" Binding="{Binding IsExistInDB}" Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                        <TabItem Header="Files">
+                            <DataGrid x:Name="FileDataGrid" AutoGenerateColumns="True" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource="{Binding FilesCollection, UpdateSourceTrigger=PropertyChanged}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="FileID" Binding="{Binding FileId}" Width="*" />
+                                    <DataGridTextColumn Header="FileName" Binding="{Binding FileName}" Width="*" />
+                                    <DataGridTextColumn Header="FileType" Binding="{Binding FileType}" Width="*" />
+                                    <DataGridTextColumn Header="RevisionId" Binding="{Binding RevisionId}" Width="*" />
+                                    <DataGridTextColumn Header="FileSize" Binding="{Binding FileSize}" Width="*" />
+                                    <DataGridTextColumn Header="LocalPath" Binding="{Binding LocalPath}" Width="*" />
+                                    <DataGridTextColumn Header="Checksum" Binding="{Binding Checksum}" Width="*" />
+                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*" />
+                                    <DataGridTextColumn Header="StatusInfo" Binding="{Binding StatusInfo}" Width="*" />
+                                    <DataGridCheckBoxColumn Header="IsExistInDB" Binding="{Binding IsExistInDB}" Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            
+                        </TabItem><TabItem Header="Tags">
+                            <DataGrid x:Name="TagDataGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource="{Binding TagsCollection}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="TagID" Binding="{Binding TagId}" Width="*" />
+                                    <DataGridTextColumn Header="Position" Binding="{Binding Position}" Width="*" />
+                                    <DataGridTextColumn Header="TagName" Binding="{Binding TagName}" Width="*" />
+                                    <DataGridTextColumn Header="Characteristic" Binding="{Binding Characteristic}" Width="*" />
+                                    <DataGridTextColumn Header="TreeItemId" Binding="{Binding TreeItemId}" Width="*" />
+                                    <DataGridTextColumn Header="ClassId" Binding="{Binding TagClassId}" Width="*" />
+                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*" />
+                                    <DataGridTextColumn Header="StatusInfo" Binding="{Binding StatusInfo}" Width="*" />
+                                    <DataGridCheckBoxColumn Header="IsExistInDB" Binding="{Binding IsExistInDB}" Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            
+                        </TabItem>
+                        <TabItem Header="Relationships">
+                            <DataGrid x:Name="RelationshipGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource ="{Binding RelationshipsCollection}" >
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="RelID" Binding="{Binding RelationshipId}" Width="*" />
+                                    <DataGridTextColumn Header="RelTypeID" Binding="{Binding RelTypeId}" Width="*" />
+                                    <DataGridTextColumn Header="LeftObjectID" Binding="{Binding LeftObject.ObjectId}" Width="*" />
+                                    <DataGridTextColumn Header="LeftObjectCode" Binding="{Binding LeftObject.ObjectCode}" Width="*" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="LeftObjectName" Binding="{Binding LeftObject.ObjectName}" Width="*" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="RightObjectID" Binding="{Binding RightObject.ObjectId}" Width="*" />
+                                    <DataGridTextColumn Header="RightObjectCode" Binding="{Binding RightObject.ObjectCode}" Width="*" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="RightObjectName" Binding="{Binding RightObject.ObjectName}" Width="*" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="RoleId" Binding="{Binding RoleId}" Width="*" />
+                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*" />
+                                    <DataGridTextColumn Header="StatusInfo" Binding="{Binding StatusInfo}" Width="*" />
+                                    <DataGridCheckBoxColumn Header="IsExistInDB" Binding="{Binding IsExistInDB}" Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                        <TabItem Header="TreeItems">
+                            <DataGrid x:Name="TreeItemGrid"  HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource ="{Binding TreeItemsCollection}" >
+                                
+                            </DataGrid>
+                        </TabItem>
+                        <TabItem Header="AttributesObjectValue">
+                            <!--<DataGrid x:Name="AttributesObjectValueGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource ="{Binding AttributeObjectValuesCollection}" >
+                            </DataGrid>-->
+                            <DataGrid Grid.Row="2" x:Name="AttributesObjectValueGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource ="{Binding AttributeObjectValueViewModelCollection}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ObjectCode" Binding="{Binding AttributeObjectValue.Object.ObjectId}" Width="*" />
+                                    <DataGridTextColumn Header="ObjectCode" Binding="{Binding AttributeObjectValue.Object.ObjectCode}" Width="*" />
+                                    <DataGridTextColumn Header="StringValue" Binding="{Binding AttributeObjectValue.Attribute.AttributeName}" Width="*" />
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <uc:AttributeObjectValueView DataContext="{Binding AttributeObjectValue}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                    </TabControl>                    
+                </Grid>
+                
+            </TabItem>
+        </TabControl>
+
+        <Label Grid.Row="2"  Grid.Column="0" x:Name="txtLoading" Content="{Binding infoTextLine_massage}" Visibility="{Binding infoTextLine_visibility}"/>
+    </Grid>
+</Window>

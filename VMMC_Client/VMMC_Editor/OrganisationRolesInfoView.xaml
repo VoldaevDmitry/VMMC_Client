@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="VMMC_Editor.OrganisationRolesInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VMMC_Editor"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <DataGrid Grid.Row="0" x:Name="OrganisationRolesDataGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" ItemsSource="{Binding organisationRolesInfoCollection}"  CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Наименование" Binding="{Binding OrganisationName, UpdateSourceTrigger=PropertyChanged}" Width="10*" />
+                    <DataGridTextColumn Header="ИНН" Binding="{Binding OrganisationINN, UpdateSourceTrigger=PropertyChanged}" Width="2*" />
+                    <DataGridTextColumn Header="Аббревиатура" Binding="{Binding OrganisationShortName, UpdateSourceTrigger=PropertyChanged}" Width="2*" />
+                    <DataGridCheckBoxColumn Header="Организация" Binding="{Binding IsOrganization, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridCheckBoxColumn Header="Изготовитель" Binding="{Binding IsManufacturer, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridCheckBoxColumn Header="Поставщик" Binding="{Binding IsSupplier, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridCheckBoxColumn Header="Стройконтроль" Binding="{Binding IsControl, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridCheckBoxColumn Header="СМР" Binding="{Binding IsSMR, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridTemplateColumn Header="Очистить" Width="*" Visibility="Hidden">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Clear" Click="ClearRowButton_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <DockPanel Grid.Row="1">
+                <Button Content="Save" Click="SaveRowButton_Click" VerticalAlignment="Center" HorizontalAlignment="Right" Width="99" Margin="5" DockPanel.Dock="Right" />
+                <Button Content="Refresh" Click="RefreshButton_Click" VerticalAlignment="Center" HorizontalAlignment="Right" Width="99" Margin="5" DockPanel.Dock="Right" />
+            </DockPanel>
+            
+            
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,53 @@
+﻿<Window x:Class="VMMC_PdfParcer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VMMC_PdfParcer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="GetSourcePdf" Command="{Binding GetSourcePdfCommand}"/>
+                <MenuItem Header="ParcingPdf" Command="{Binding ParcingPdfCommand}"/>
+                <Separator/>
+                <MenuItem Header="Открыть" IsEnabled="False"/>
+                <MenuItem Header="Сохранить" IsEnabled="False" />
+                <Separator/>
+                <MenuItem Header="Logout" />
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1">
+                    <local:SelectSourcePdfView DataContext="{Binding SelectSourcePdfViewModel}" Visibility="{Binding SelectSourcePdfViewVisibility}"/>
+                    <local:AnalizePdfPagesView DataContext="{Binding AnalizePdfPagesViewModel}" Visibility="{Binding AnalizePdfPagesViewVisibility}"/>
+                    <local:EditDocumentAttributesView DataContext="{Binding EditDocumentAttributesViewModel}" Visibility="{Binding EditDocumentAttributesViewVisibility}"/>            
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="SelectSourcePdfView" IsEnabled="{Binding IsSelectSourcePdfViewAvailable}" Command="{Binding ShowSelectSourcePdfViewCommand}"/>
+                <Button Content="AnalizePdfPagesView" IsEnabled="{Binding IsAnalizePdfPagesViewAvailable}" Command="{Binding ShowAnalizePdfPagesViewCommand}"/>
+                <Button Content="EditDocumentAttributesView" IsEnabled="{Binding IsEditDocumentAttributesViewAvailable}" Command="{Binding ShowEditDocumentAttributesViewCommand}"/>
+            </StackPanel >
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" x:Name="txtLoading" Content="Готово"/>
+
+            <StackPanel Grid.Column="1" x:Name="documetnsCommandPanel" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Click="OkButton_Click" Margin="5" Content="Готово" Width="100"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

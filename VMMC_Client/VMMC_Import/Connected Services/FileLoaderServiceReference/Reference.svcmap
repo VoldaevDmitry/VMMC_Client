@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="915e71af-22cf-4cbb-b485-fa4c15b59b84" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://server-db.vnp2.main:8080/FileLoaderService" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="FileLoaderService.xsd" MetadataType="Schema" ID="8778730d-59d8-45c7-bf70-8f3ee408740f" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileLoaderService?xsd=xsd3" />
+    <MetadataFile FileName="FileLoaderService.disco" MetadataType="Disco" ID="439b385d-69a9-4f09-b582-95935db6fda5" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileLoaderService?disco" />
+    <MetadataFile FileName="FileLoaderService1.xsd" MetadataType="Schema" ID="1a54937b-ccf7-4ced-8f88-ac729ddde8dd" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileLoaderService?xsd=xsd0" />
+    <MetadataFile FileName="FileLoaderService.wsdl" MetadataType="Wsdl" ID="b1848146-ea76-4545-b215-1bb1d12f8ef3" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileLoaderService?wsdl" />
+    <MetadataFile FileName="FileLoaderService2.xsd" MetadataType="Schema" ID="1459f490-c9c3-41b6-88b8-7296417eafc5" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileLoaderService?xsd=xsd1" />
+    <MetadataFile FileName="FileLoaderService3.xsd" MetadataType="Schema" ID="b1dc82aa-3965-42c7-8bea-aba5617b6630" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileLoaderService?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

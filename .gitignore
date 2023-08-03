@@ -48,3 +48,26 @@ Thumbs.db
 *.mov
 *.wmv
 
+VMMC_Client/.vs/
+VMMC_Client/packages/
+
+VMMC_Client/VMMC_Client/obj/
+VMMC_Client/VMMC_Client/bin/
+VMMC_Client/VMMC_Core/obj/
+VMMC_Client/VMMC_Core/bin/
+VMMC_Client/VMMC_DataBaseParcer/obj/
+VMMC_Client/VMMC_DataBaseParcer/bin/
+VMMC_Client/VMMC_Editor/obj/
+VMMC_Client/VMMC_Editor/bin/
+VMMC_Client/VMMC_ExcelParcer/obj/
+VMMC_Client/VMMC_ExcelParcer/bin/
+VMMC_Client/VMMC_FileParser/obj/
+VMMC_Client/VMMC_FileParser/bin/
+VMMC_Client/VMMC_Import/obj/
+VMMC_Client/VMMC_Import/bin/
+VMMC_Client/VMMC_Launcher/obj/
+VMMC_Client/VMMC_Launcher/bin/
+VMMC_Client/VMMC_Login/obj/
+VMMC_Client/VMMC_Login/bin/
+VMMC_Client/VMMC_PdfParcer/obj/
+VMMC_Client/VMMC_PdfParcer/bin/

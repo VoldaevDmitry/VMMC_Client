@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="7aa354f2-163e-421b-bbf2-4f3c551da564" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://server-db.vnp2.main:8080/FileDeleteService" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="FileDeleteService.xsd" MetadataType="Schema" ID="941fb934-22a1-4875-8f91-fed7c7d832cf" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileDeleteService?xsd=xsd2" />
+    <MetadataFile FileName="FileDeleteService.wsdl" MetadataType="Wsdl" ID="77f2a6b8-d432-4bc3-b73d-42146d101b26" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileDeleteService?wsdl" />
+    <MetadataFile FileName="FileDeleteService1.xsd" MetadataType="Schema" ID="e3970f69-0d7e-42a2-bab7-34e5b5ee8532" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileDeleteService?xsd=xsd1" />
+    <MetadataFile FileName="FileDeleteService.disco" MetadataType="Disco" ID="f4d4b845-47cb-44bb-8d77-9f96a7d2e84a" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileDeleteService?disco" />
+    <MetadataFile FileName="FileDeleteService2.xsd" MetadataType="Schema" ID="621b38e7-8ac0-434a-92b5-c7bbd2ba5750" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileDeleteService?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

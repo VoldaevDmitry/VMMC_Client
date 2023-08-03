@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="68c1ad1d-4c09-4284-9c51-eab3911b9758" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://server-db.vnp2.main:8080/FileGetterService" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="FileGetterService.disco" MetadataType="Disco" ID="ab5399c8-7b80-445d-bc17-943861601f5c" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileGetterService?disco" />
+    <MetadataFile FileName="FileGetterService.xsd" MetadataType="Schema" ID="e9131148-18a5-4b19-a1ec-b2b8b7959a90" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileGetterService?xsd=xsd1" />
+    <MetadataFile FileName="FileGetterService1.xsd" MetadataType="Schema" ID="416475d2-2662-476d-96b2-ff1cf27452a2" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileGetterService?xsd=xsd0" />
+    <MetadataFile FileName="FileGetterService.wsdl" MetadataType="Wsdl" ID="99087484-755b-4d4a-a638-fa4291cf2941" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileGetterService?wsdl" />
+    <MetadataFile FileName="FileGetterService2.xsd" MetadataType="Schema" ID="25499240-4bd1-4154-b3ff-753f5d3f6e28" SourceId="1" SourceUrl="http://server-db.vnp2.main:8080/FileGetterService?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

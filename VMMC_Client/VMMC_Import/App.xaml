@@ -1,0 +1,9 @@
+﻿<Application x:Class="VMMC_Import.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:VMMC_Import"
+             StartupUri="MainWindow.xaml" Startup = "VMMC_Import_Startup">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>

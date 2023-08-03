@@ -1,0 +1,100 @@
+﻿<Window x:Class="VMMC_ExcelParcer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VMMC_ExcelParcer"        
+        xmlns:uc="clr-namespace:VMMC_Core.CommonControls;assembly=VMMC_Core"
+        mc:Ignorable="d"
+        Title="Импорт нанных из Excel" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0" >
+            <MenuItem Header="Файл">
+                <MenuItem Header="Загрузка по шаблону">
+                    <MenuItem Header="Выбрать файл реестра моделей..." Command="{Binding GetDocuments3DTreeItemFromExcelCommand}"/>
+                    <MenuItem Header="Выбрать файл реестра РД..." Command="{Binding GetDocuments3DDocumentsRdFromExcelCommand}"/>
+                    <MenuItem Header="Выбрать файл реестра тегов..." Command="{Binding GetDocuments3DTagFromExcelCommand}"/>
+                    <MenuItem Header="Выбрать файл 2222..." Command="{Binding GetDocumentsRdTagsRelationshipsFromExcelCommand}"/>
+                    <MenuItem Header="Выбрать файл реестра РД из MDR..." Command="{Binding GetDocumentsRdFromMDRExcelCommand}"/>                    
+                    <MenuItem Header="портирование проекта из AW...">
+                        <MenuItem Header="Выбрать файл набора тегов..." Command="{Binding GetBKFILLTagsFromExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл набора значений отношений тегов с тегами..." Command="{Binding GetBKFILLTagTagRelFromExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл набора значений атрибутов тегов..." Command="{Binding GetBKFILLTagsAttributesFromExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл набора списочных значений атрибутов тегов..." Command="{Binding GetBKFILLTagsEnumAttributeValuesFromExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл набора елементов дерева документов..." Command="{Binding GetBKFILLDocTreeFromExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл набора документов..." Command="{Binding GetBKFILLDocumentsFromExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл набора отношений документов..." Command="{Binding GetBKFILLDocumentsRelationshipFromExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл набора файлов документов..." Command="{Binding GetBKFILLDocumentsFilesFromExcelCommand}"/>
+                    </MenuItem>
+                    <MenuItem Header="Для Юры...">
+                        <MenuItem Header="Выбрать файл реестра РД по ВММК..." Command="{Binding GetComplektsWithRevisionsListCommand}"/>
+                        <MenuItem Header="Экспорт перечня РД..." Command="{Binding ExportToExcelCommand}"/>
+                    </MenuItem>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Открыть" IsEnabled="False"/>
+                <MenuItem Header="Сохранить" IsEnabled="False" />
+                <Separator/>
+                <MenuItem Header="LogOut" IsEnabled="False"/>
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TabControl Grid.Row="1">
+                <TabItem Header="Комплекты">
+                    <DataGrid Grid.Row="1" x:Name="Complectss_DataGrid" ItemsSource ="{Binding ComplektsCollection}" />
+                </TabItem>
+                <TabItem Header="Документы">
+                    <DataGrid Grid.Row="1" x:Name="Documents_DataGrid" SelectionChanged="documetnsGrid_SelectionChanged" ItemsSource ="{Binding DocumentsCollection}" />
+                </TabItem>
+                <TabItem Header="Теги">
+                    <DataGrid Grid.Row="1" x:Name="Tags_DataGrid" ItemsSource ="{Binding TagsCollection}" />
+                </TabItem>
+                <TabItem Header="Отношения">
+                    <DataGrid Grid.Row="1" x:Name="Relationships_DataGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource ="{Binding RelationshipsCollection}" >                        
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="RelID" Binding="{Binding RelationshipId}" Width="*" />
+                            <DataGridTextColumn Header="RelTypeID" Binding="{Binding RelTypeId}" Width="*" />
+                            <DataGridTextColumn Header="LeftObjectID" Binding="{Binding LeftObject.ObjectId}" Width="*" />
+                            <DataGridTextColumn Header="LeftObjectCode" Binding="{Binding LeftObject.ObjectCode}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="LeftObjectName" Binding="{Binding LeftObject.ObjectName}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="RightObjectID" Binding="{Binding RightObject.ObjectId}" Width="*" />
+                            <DataGridTextColumn Header="RightObjectCode" Binding="{Binding RightObject.ObjectCode}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="RightObjectName" Binding="{Binding RightObject.ObjectName}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="RoleId" Binding="{Binding RoleId}" Width="*" />
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
+            <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+            <uc:DocumentView x:Name="DocumentViewControl" Grid.Column="2"/>
+
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" x:Name="txtLoading" Content="Готово"/>
+
+            <StackPanel Grid.Column="1" x:Name="documetnsCommandPanel" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Click="OkButton_Click" Margin="5" Content="Готово" Width="100"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

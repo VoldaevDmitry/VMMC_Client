@@ -1,0 +1,38 @@
+﻿<Window x:Class="VMMC_Login.MainWindow" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VMMC_Login"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="212.394" Width="300" MinWidth="300" MinHeight="200" ResizeMode="NoResize">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Right" Content="VMMC" FontWeight="Bold" FontStyle="Italic" FontSize="40" />
+        <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Server: " />
+        <TextBox x:Name="ServerName_TextBox" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text ="Server-DB" LostFocus="ServerName_TextBox_LostFocus"/>
+        <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data base:"   />
+        <ComboBox x:Name="DataBase_ComboBox" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding avalibaleDataBaseList}" SelectionChanged="DataBase_ComboBox_SelectionChanged"/>
+        <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="User:" />
+        <TextBox x:Name="UserName_TextBox" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" IsEnabled="False"/>
+        <Grid Grid.Row="4" Grid.ColumnSpan="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="ShowClient_Button" Content="Client" Margin="5" Click="ShowClient_Button_Click"/>
+                <Button x:Name="ShowImport_Button" Content="Import" Margin="5" Click="ShowImport_Button_Click"/>
+                <Button x:Name="ShowEditor_Button" Content="Editor" Margin="5" Click="ShowEditor_Button_Click"/>
+            </StackPanel>
+        </Grid>
+
+
+    </Grid>
+</Window>

@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="VMMC_PdfParcer.SelectSourcePdfView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VMMC_PdfParcer"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.ColumnSpan="2" Content="Наименование Комплекта ИД"/>
+        <TextBox  Grid.Row="1" Grid.ColumnSpan="2" Margin="5" Text="{Binding ComplektID.ComplektCode}" />
+        
+        <Label Grid.Row="2" Grid.ColumnSpan="2"  Content="Путь к PDF"/>
+        <TextBox Grid.Row="3" Grid.Column="0" x:Name="pdfPath"  Margin="5" Text="{Binding SourcePdfPath}" TextChanged="pdfPath_TextChanged"/>
+        <Button Grid.Row="3" Grid.Column="1" Content="Обзор..." Margin="5" Command="{Binding GetSourcePdfCommand}"/>
+
+        <Label Grid.Row="4" Grid.ColumnSpan="2"  Content="Связанные комплекты РД"/>
+        <TextBox Grid.Row="5" Grid.Column="0" Margin="5" Text="{Binding ComplektRD.ComplektCode}" />
+        <Button Grid.Row="5" Grid.Column="1" Content="Добавить" Margin="5" Command="{Binding AddComplektRDCommand}"/>
+        <ListBox Grid.Row="6" Grid.ColumnSpan="2" Height="100" Margin="5" ItemsSource="{Binding ComplektsRDCollection}" DisplayMemberPath="ComplektCode"/>
+        
+        <GridSplitter Grid.Column="2" Grid.RowSpan="8" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+        <WebBrowser Grid.RowSpan="8" Grid.Column="3" x:Name="pdfBrowser" Margin="5">
+            
+        </WebBrowser>
+
+
+    </Grid>
+</UserControl>

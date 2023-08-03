@@ -1,0 +1,193 @@
+﻿<Window x:Class="VMMC_DataBaseParcer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VMMC_DataBaseParcer"
+        xmlns:uc="clr-namespace:VMMC_Core.CommonControls;assembly=VMMC_Core"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0" >
+            <MenuItem Header="Файл">
+                <MenuItem Header="Отношения...">
+                    <MenuItem Header="отношения Тег-РД..." Click="TagRdRels_MenuItem_Click" />
+                    <MenuItem Header="отношения Элемент дерева-РД..." Click="TreeRdRels_MenuItem_Click" />
+                    <MenuItem Header="отношения Элемент дерева-Комплект ИД..." Click="TreeIdComplektsRels_MenuItem_Click" />
+                </MenuItem>
+
+                <MenuItem Header="Элементы дерева ИД..." Click="IdTree_MenuItem_Click" />
+                <Separator/>
+                <MenuItem Header="Открыть" IsEnabled="False"/>
+                <MenuItem Header="Сохранить" IsEnabled="False" />
+                <Separator/>
+                <MenuItem Header="LogOut" IsEnabled="False"/>
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="1" x:Name="ExecuteQuery_Button" Content="Выполнить запрос" Click="ExecuteQuery_Button_Click"/>
+                <TabControl Grid.Row="0">
+                    <TabItem Header="Комплекты">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <TextBox Grid.Row="0" x:Name="Complekts_Query" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            </Grid>
+                            <GridSplitter  Grid.Row="1"  ShowsPreview="False" Height="3" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <DataGrid Grid.Row="2" x:Name="Complekts_DataGrid" ItemsSource ="{Binding ComplektsCollection}" />
+
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Документы">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <TextBox Grid.Row="0" x:Name="Documents_Query" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            </Grid>
+                            <GridSplitter  Grid.Row="1"  ShowsPreview="False" Height="3" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <DataGrid Grid.Row="2" x:Name="Documents_DataGrid" SelectionChanged="documetnsGrid_SelectionChanged" ItemsSource ="{Binding DocumentsCollection}" />
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Теги">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <TextBox Grid.Row="0" x:Name="Tags_Query" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            </Grid>
+                            <GridSplitter  Grid.Row="1"  ShowsPreview="False" Height="3" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <DataGrid Grid.Row="1" x:Name="Tags_DataGrid" ItemsSource ="{Binding TagsCollection}" />
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Отношения">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <TextBox Grid.Row="0" x:Name="Relationships_Query" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            </Grid>
+                            <GridSplitter  Grid.Row="1"  ShowsPreview="False" Height="3" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <DataGrid Grid.Row="2" x:Name="Relationships_DataGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource ="{Binding RelationshipsCollection}" >
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="RelID" Binding="{Binding RelationshipId}" Width="*" />
+                                    <DataGridTextColumn Header="RelTypeID" Binding="{Binding RelTypeId}" Width="*" />
+                                    <DataGridTextColumn Header="LeftObjectID" Binding="{Binding LeftObject.ObjectId}" Width="*" />
+                                    <DataGridTextColumn Header="LeftObjectCode" Binding="{Binding LeftObject.ObjectCode}" Width="*" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="LeftObjectName" Binding="{Binding LeftObject.ObjectName}" Width="*" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="RightObjectID" Binding="{Binding RightObject.ObjectId}" Width="*" />
+                                    <DataGridTextColumn Header="RightObjectCode" Binding="{Binding RightObject.ObjectCode}" Width="*" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="RightObjectName" Binding="{Binding RightObject.ObjectName}" Width="*" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="RoleId" Binding="{Binding RoleId}" Width="*" />
+
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Элементы дерева">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="409*"/>
+                                    <ColumnDefinition Width="182*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Row="0" x:Name="TreeItems_Query" TextWrapping="Wrap" AcceptsReturn="True" Grid.ColumnSpan="2"/>
+                            </Grid>
+                            <GridSplitter  Grid.Row="1"  ShowsPreview="False" Height="3" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <DataGrid Grid.Row="2" x:Name="TreeItems_DataGrid" ItemsSource ="{Binding TreeItemsCollection}" />
+
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Атрибуты">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="11*"/>
+                                    <ColumnDefinition Width="282*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Row="0" x:Name="Attributes_Query" TextWrapping="Wrap" AcceptsReturn="True" Grid.ColumnSpan="2"/>
+                            </Grid>
+                            <GridSplitter  Grid.Row="1"  ShowsPreview="False" Height="3" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <!--<DataGrid Grid.Row="2" x:Name="Attributes_DataGrid" ItemsSource ="{Binding AttributeObjectValuesCollection}">-->
+
+                            <DataGrid Grid.Row="2" x:Name="Attributes_DataGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource ="{Binding AttributeObjectValueViewModelCollection}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ObjectCode" Binding="{Binding AttributeObjectValue.Object.ObjectId}" Width="*" />
+                                    <DataGridTextColumn Header="ObjectCode" Binding="{Binding AttributeObjectValue.Object.ObjectCode}" Width="*" />
+                                    <DataGridTextColumn Header="StringValue" Binding="{Binding AttributeObjectValue.Attribute.AttributeName}" Width="*" />
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <uc:AttributeObjectValueView DataContext="{Binding AttributeObjectValue}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+
+            </Grid>
+
+            <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+            <uc:DocumentView x:Name="DocumentViewControl" Grid.Column="2"/>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" x:Name="txtLoading" Content="Готово"/>
+
+            <StackPanel Grid.Column="1" x:Name="documetnsCommandPanel" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Click="OkButton_Click" Margin="5" Content="Готово" Width="100"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
