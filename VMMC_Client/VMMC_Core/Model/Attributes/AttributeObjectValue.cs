@@ -119,8 +119,9 @@ FROM [dbo].[AttributeObjectValues] WHERE [AttributeId] = '" + attributeId.ToStri
                         attributeObjectValue.Status = "Exist";
                         attributeObjectValue.IsExistInDB = true;
                     }
+                    return attributeObjectValue;
                 }
-                return attributeObjectValue;
+                else return null;
             }
         }
         public ObservableCollection<VMMC_Core.AttributeObjectValue> GetDbAttributeObjectValuesList(Guid objectId)
@@ -295,7 +296,7 @@ FROM [dbo].[AttributeObjectValues] WHERE [AttributeId] = '" + attributeId.ToStri
                     VMMC_Core.AttributeObjectValue existAttributeObjectValue = GetAttributeObjectValue(Attribute.AttributeId, Object.ObjectId);
                     if (Attribute.AttributeName == null) Attribute = Attribute.GetAttribute(Attribute.AttributeId);
 
-                    if ((existAttributeObjectValue.AttributeObjectValueId == null || existAttributeObjectValue.AttributeObjectValueId == Guid.Empty /*existAttributeObjectValue.AttributeObjectValueId.ToString() == "00000000-0000-0000-0000-000000000000"*/) || Attribute.AllowMultiValues)
+                    if ((existAttributeObjectValue == null || existAttributeObjectValue.AttributeObjectValueId == Guid.Empty /*existAttributeObjectValue.AttributeObjectValueId.ToString() == "00000000-0000-0000-0000-000000000000"*/) || Attribute.AllowMultiValues)
                     { /*create new aov*/
 
                         using (SqlConnection connection = new SqlConnection(connectionString))

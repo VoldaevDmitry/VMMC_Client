@@ -2163,7 +2163,7 @@ namespace VMMC_ExcelParcer
                                 break;
 
                             case "char_value":
-                                attributeCharValueStr = resultDT.Rows[i][j].ToString().Replace("''", "\"").Replace("\r", "\n").Trim();
+                                attributeCharValueStr = resultDT.Rows[i][j].ToString().Replace("''", "\"").Replace("'", "\"").Replace("\r", "\n").Trim();
                                 break;
 
                             case "date_value":
@@ -2178,8 +2178,7 @@ namespace VMMC_ExcelParcer
                                 break;
                         }
                     }
-
-
+                                       
 
                     VMMC_Core.Tag tag = new VMMC_Core.Tag(sessionInfo).GetTag(tagCodeStr);
                     if (tag != null)
@@ -2192,6 +2191,7 @@ namespace VMMC_ExcelParcer
                         {
                             VMMC_Core.AttributeObjectValue existAOV = new VMMC_Core.AttributeObjectValue(sessionInfo).GetAttributeObjectValue(atr.AttributeId, tag.TagId);
 
+                           
                             if (existAOV == null || atr.AllowMultiValues)
                             {
 
