@@ -265,6 +265,16 @@ namespace VMMC_ExcelParcer
             }
         }
 
+        private VMMC_Core.RelayCommand getBKFILLAttributeFromExcelCommand;
+        public VMMC_Core.RelayCommand GetBKFILLAttributeFromExcelCommand
+        {
+            get
+            {
+                return getBKFILLAttributeFromExcelCommand ??
+                  (getBKFILLAttributeFromExcelCommand = new RelayCommand(obj => { GetBKFILLAttributeFromExcel(); }));
+            }
+        }
+
 
         private VMMC_Core.RelayCommand exportToExcelCommand;
         public VMMC_Core.RelayCommand ExportToExcelCommand
@@ -1361,7 +1371,7 @@ namespace VMMC_ExcelParcer
                         {                            
                             foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
                             {
-                                AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                             }
                         }
                         if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
@@ -1732,7 +1742,7 @@ namespace VMMC_ExcelParcer
                         {
                             foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
                             {
-                                AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                             }
                         }
                         if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
@@ -1848,22 +1858,28 @@ namespace VMMC_ExcelParcer
                         treeItemsList.Add(buildingTreeItem);
                     }
 
-                    VMMC_Core.TreeItem complexTreeItem = new TreeItem(sessionInfo).getTreeItem("004", buildingTreeItem.TreeItemId.ToString());
-                    if (complexTreeItem.TreeItemCode == null)
+                    string complexStr = systemCodeStr.Substring(8, 3);
+                    string systemStr = systemCodeStr.Substring(12, 4);
+                    VMMC_Core.TreeItem complexTreeItem = new TreeItem(sessionInfo).getTreeItem(systemCodeStr.Substring(8, 3), buildingTreeItem.TreeItemId.ToString());
+                    if (complexTreeItem == null)
                     {
+                        complexTreeItem = new TreeItem(sessionInfo);
+
                         complexTreeItem.TreeItemId = Guid.NewGuid();
-                        complexTreeItem.TreeItemCode = "004";
-                        complexTreeItem.TreeItemName = "004";
+                        complexTreeItem.TreeItemCode = systemCodeStr.Substring(8, 3);
+                        complexTreeItem.TreeItemName = systemCodeStr.Substring(8, 3);
                         complexTreeItem.Class = new VMMC_Core.Class(sessionInfo).getClass("COMPLEX");
                         complexTreeItem.Parent = buildingTreeItem;
                         treeItemsList.Add(complexTreeItem);
                     }
 
-                    VMMC_Core.TreeItem systemTreeItem = new TreeItem(sessionInfo).getTreeItem(systemCodeStr.Replace("4550.70.004.", ""), complexTreeItem.TreeItemId.ToString());
-                    if (systemTreeItem.TreeItemCode == null)
+                    VMMC_Core.TreeItem systemTreeItem = new TreeItem(sessionInfo).getTreeItem(systemCodeStr.Substring(12, 4), complexTreeItem.TreeItemId.ToString());
+                    if (systemTreeItem == null)
                     {
+                        systemTreeItem = new TreeItem(sessionInfo);
+
                         systemTreeItem.TreeItemId = Guid.NewGuid();
-                        systemTreeItem.TreeItemCode = systemCodeStr.Replace("4550.70.004.", "");
+                        systemTreeItem.TreeItemCode = systemCodeStr.Substring(12, 4);
                         systemTreeItem.TreeItemName = systemNameStr;
                         systemTreeItem.Class = new VMMC_Core.Class(sessionInfo).getClass("SYSTEM");
                         systemTreeItem.Parent = complexTreeItem;
@@ -1947,7 +1963,7 @@ namespace VMMC_ExcelParcer
                         {
                             foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
                             {
-                                AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                             }
                         }
                         if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
@@ -2084,7 +2100,7 @@ namespace VMMC_ExcelParcer
                         {
                             foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
                             {
-                                AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                             }
                         }
                         if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
@@ -2176,60 +2192,63 @@ namespace VMMC_ExcelParcer
                         {
                             VMMC_Core.AttributeObjectValue existAOV = new VMMC_Core.AttributeObjectValue(sessionInfo).GetAttributeObjectValue(atr.AttributeId, tag.TagId);
 
-
-                            VMMC_Core.AttributeObjectValue newAOV = new VMMC_Core.AttributeObjectValue(sessionInfo)
+                            if (existAOV == null || atr.AllowMultiValues)
                             {
-                                AttributeObjectValueId = Guid.NewGuid(),
-                                Attribute=atr,
-                                Object = new VMMC_Core.DbObject(sessionInfo).GetObject(tag.TagId),
-                            };
 
-                            switch (attributeTypeStr)
-                            {
-                                case "CH":
-                                    if (attributeCharValueStr != "" && attributeCharValueStr != "NULL") newAOV.StringValue = attributeCharValueStr;
-                                    break;
+                                VMMC_Core.AttributeObjectValue newAOV = new VMMC_Core.AttributeObjectValue(sessionInfo)
+                                {
+                                    AttributeObjectValueId = Guid.NewGuid(),
+                                    Attribute = atr,
+                                    Object = new VMMC_Core.DbObject(sessionInfo).GetObject(tag.TagId),
+                                };
 
-                                case "DA":
-                                    if (attributeDateValueStr != "" && attributeCharValueStr != "NULL") newAOV.DateTimeValue = DateTime.Parse(attributeDateValueStr);
-                                    break;
+                                switch (attributeTypeStr)
+                                {
+                                    case "CH":
+                                        if (attributeCharValueStr != "" && attributeCharValueStr != "NULL") newAOV.StringValue = attributeCharValueStr;
+                                        break;
 
-                                case "NU":
-                                    if (attributeNumberValueStr != "" && attributeCharValueStr != "NULL") newAOV.NumberValue = decimal.Parse(attributeNumberValueStr);
-                                    break;
+                                    case "DA":
+                                        if (attributeDateValueStr != "" && attributeCharValueStr != "NULL") newAOV.DateTimeValue = DateTime.Parse(attributeDateValueStr);
+                                        break;
 
-                                case "PD":
-                                    if (attributeCharValueStr != "" && attributeCharValueStr != "NULL") 
-                                    {
-                                        VMMC_Core.EnumAttributeValue eav = new VMMC_Core.EnumAttributeValue(sessionInfo).GetEnumAttributeValue(newAOV.Attribute.AttributeId, attributeCharValueStr);
-                                        if (eav == null) 
+                                    case "NU":
+                                        if (attributeNumberValueStr != "" && attributeCharValueStr != "NULL") newAOV.NumberValue = decimal.Parse(attributeNumberValueStr);
+                                        break;
+
+                                    case "PD":
+                                        if (attributeCharValueStr != "" && attributeCharValueStr != "NULL")
                                         {
-                                            eav = new VMMC_Core.EnumAttributeValue(sessionInfo)
+                                            VMMC_Core.EnumAttributeValue eav = new VMMC_Core.EnumAttributeValue(sessionInfo).GetEnumAttributeValue(newAOV.Attribute.AttributeId, attributeCharValueStr);
+                                            if (eav == null)
                                             {
-                                                EnumAttributeValueId = Guid.NewGuid(),
-                                                AttributeId = newAOV.Attribute.AttributeId,
-                                                EnumValueStr = attributeCharValueStr
-                                            };
-                                            eav.CreateDBEnumAttributeValue();
-                                            eav = new VMMC_Core.EnumAttributeValue(sessionInfo).GetEnumAttributeValue(newAOV.Attribute.AttributeId, attributeCharValueStr);
-                                        }
-                                        
-                                        if (eav != null)
-                                        {
-                                            VMMC_Core.EnumObjectValue eov = new EnumObjectValue(sessionInfo).GetEnumObjectValue(newAOV.AttributeObjectValueId, eav.EnumAttributeValueId);
-                                            if (eov == null) eov = new EnumObjectValue(sessionInfo) { EnumObjectValueId = Guid.NewGuid(), AttributeObjectValue = newAOV, EnumAttributeValue = eav };                                            
-                                            
-                                            newAOV.EnumObjectValue = eov;
-                                            newAOV.AvailibleEnumAttributeValueList = new EnumAttributeValue(sessionInfo).GetAvailableEnumAttributeValuesList(newAOV.Attribute.AttributeId);
-                                            newAOV.AvailibleValuesList = new EnumObjectValue(sessionInfo).GetAvailibleEnumObjectValuesList(newAOV.Attribute.AttributeId);
-                                        }
-                                    }                                    
-                                    break;
+                                                eav = new VMMC_Core.EnumAttributeValue(sessionInfo)
+                                                {
+                                                    EnumAttributeValueId = Guid.NewGuid(),
+                                                    AttributeId = newAOV.Attribute.AttributeId,
+                                                    EnumValueStr = attributeCharValueStr
+                                                };
+                                                eav.CreateDBEnumAttributeValue();
+                                                eav = new VMMC_Core.EnumAttributeValue(sessionInfo).GetEnumAttributeValue(newAOV.Attribute.AttributeId, attributeCharValueStr);
+                                            }
 
-                                default:
-                                    break;
-                            }           
-                            atrList.Add(newAOV);
+                                            if (eav != null)
+                                            {
+                                                VMMC_Core.EnumObjectValue eov = new EnumObjectValue(sessionInfo).GetEnumObjectValue(newAOV.AttributeObjectValueId, eav.EnumAttributeValueId);
+                                                if (eov == null) eov = new EnumObjectValue(sessionInfo) { EnumObjectValueId = Guid.NewGuid(), AttributeObjectValue = newAOV, EnumAttributeValue = eav };
+
+                                                newAOV.EnumObjectValue = eov;
+                                                newAOV.AvailibleEnumAttributeValueList = new EnumAttributeValue(sessionInfo).GetAvailableEnumAttributeValuesList(newAOV.Attribute.AttributeId);
+                                                newAOV.AvailibleValuesList = new EnumObjectValue(sessionInfo).GetAvailibleEnumObjectValuesList(newAOV.Attribute.AttributeId);
+                                            }
+                                        }
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                                atrList.Add(newAOV);
+                            }
                         }
                     }
                 }
@@ -2299,7 +2318,7 @@ namespace VMMC_ExcelParcer
                         {
                             foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
                             {
-                                AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                             }
                         }
                         if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
@@ -2314,29 +2333,14 @@ namespace VMMC_ExcelParcer
             ExcelParserViewModel excelParserViewModel = new ExcelParserViewModel(sessionInfo);
 
             ObservableCollection<DataTable> resultDtList = new VMMC_ExcelParcer.ImportFromExcel().ExcelToDataTable(FileName, true);
-            ObservableCollection<VMMC_Core.Document> docList = new ObservableCollection<VMMC_Core.Document>();
-            ObservableCollection<VMMC_Core.Tag> tagList = new ObservableCollection<VMMC_Core.Tag>();
-            ObservableCollection<VMMC_Core.Relationship> relList = new ObservableCollection<VMMC_Core.Relationship>();
-            ObservableCollection<VMMC_Core.TreeItem> treeItemsList = new ObservableCollection<VMMC_Core.TreeItem>();
-            ObservableCollection<VMMC_Core.AttributeObjectValue> atrList = new ObservableCollection<VMMC_Core.AttributeObjectValue>();
-
 
             foreach (DataTable resultDT in resultDtList)
             {
                 for (int i = 0; i < resultDT.Rows.Count; i++)
                 {
-                    string tagCodeStr = ""; //
-                    string tagNameStr = ""; //
-                    string tagClassCodeStr = ""; //
 
                     string attributeNameStr = ""; //
-                    string attributeTypeStr = ""; //
                     string attributeCharValueStr = ""; //
-                    string attributeDateValueStr = ""; //
-                    string attributeNumberValueStr = ""; //
-
-
-
 
 
                     for (int j = 0; j < resultDT.Columns.Count; j++)
@@ -2350,17 +2354,14 @@ namespace VMMC_ExcelParcer
                                 break;
 
                             case "char_value":
-                                attributeCharValueStr = resultDT.Rows[i][j].ToString().Replace("''", "\"").Replace("\r", "\n").Trim();
+                                attributeCharValueStr = resultDT.Rows[i][j].ToString().Replace("''", "\"").Replace("'", "\"").Replace("\r", "\n").Trim();
+                                if (attributeCharValueStr == "Дюйм") attributeCharValueStr = "\"";
                                 break;
 
                             default:
                                 break;
                         }
                     }
-
-
-
-
 
                     VMMC_Core.Attribute atr = new VMMC_Core.Attribute(sessionInfo).SearchAttribute(attributeNameStr);
 
@@ -2385,23 +2386,149 @@ namespace VMMC_ExcelParcer
                 }
             }
 
-            ObservableCollection<VMMC_Core.TreeItem> sortTreeItemsList = new ObservableCollection<VMMC_Core.TreeItem>();
-            foreach (VMMC_Core.TreeItem ti in treeItemsList)
+           
+
+
+            return excelParserViewModel;
+            //DataContext = excelParserViewModel;
+            //Documents_DataGrid.ItemsSource = excelParserViewModel.DocumentsCollection;
+        }
+        private void GetBKFILLAttributeFromExcel()
+        {
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
             {
-                VMMC_Core.TreeItem existti = sortTreeItemsList.Where(x => x.TreeItemCode == ti.TreeItemCode && x.Parent.TreeItemId == ti.Parent.TreeItemId).FirstOrDefault();
-                if (existti == null) sortTreeItemsList.Add(ti);
-                else
+                dialog.Multiselect = true;
+
+                DocumentsCollection = null;
+                ComplektsCollection = null;
+                TagsCollection = null;
+                TreeItemsCollection = null;
+                RelationshipsCollection = null;
+
+                dialog.ShowDialog();
+
+
+                if (dialog.FileNames != null)
+                {
+                    foreach (string fileName in dialog.FileNames)
+                    {
+                        AttributeObjectValueViewModelCollection = new ObservableCollection<VMMC_Core.CommonControls.AttributeObjectValueViewModel>();
+
+                        ExcelParserViewModel newExcelParserViewModel = GetBKFILLAttributeFromExcel(fileName);
+
+                        if (DocumentsCollection == null) DocumentsCollection = newExcelParserViewModel.DocumentsCollection;
+                        else foreach (VMMC_Core.Document document in newExcelParserViewModel.DocumentsCollection) DocumentsCollection.Add(document);
+
+                        if (TagsCollection == null) TagsCollection = newExcelParserViewModel.TagsCollection;
+                        else foreach (VMMC_Core.Tag tag in newExcelParserViewModel.TagsCollection) TagsCollection.Add(tag);
+
+                        if (ComplektsCollection == null) ComplektsCollection = newExcelParserViewModel.ComplektsCollection;
+                        else foreach (VMMC_Core.Complekt complekt in newExcelParserViewModel.ComplektsCollection) ComplektsCollection.Add(complekt);
+
+                        if (RelationshipsCollection == null) RelationshipsCollection = newExcelParserViewModel.RelationshipsCollection;
+                        else foreach (VMMC_Core.Relationship relationship in newExcelParserViewModel.RelationshipsCollection) RelationshipsCollection.Add(relationship);
+
+                        if (AttributeObjectValuesCollection == null) AttributeObjectValuesCollection = newExcelParserViewModel.AttributeObjectValuesCollection;
+                        else foreach (VMMC_Core.AttributeObjectValue attributeObjectValue in newExcelParserViewModel.AttributeObjectValuesCollection) AttributeObjectValuesCollection.Add(attributeObjectValue);
+                        if (AttributeObjectValuesCollection != null)
+                        {
+                            foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
+                            {
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
+                            }
+                        }
+                        if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
+                        else foreach (VMMC_Core.TreeItem treeItem in newExcelParserViewModel.TreeItemsCollection) TreeItemsCollection.Add(treeItem);
+
+                    }
+                }
+            }
+        }
+        public ExcelParserViewModel GetBKFILLAttributeFromExcel(string FileName)
+        {
+            ExcelParserViewModel excelParserViewModel = new ExcelParserViewModel(sessionInfo);
+
+            ObservableCollection<DataTable> resultDtList = new VMMC_ExcelParcer.ImportFromExcel().ExcelToDataTable(FileName, true);
+            ObservableCollection<VMMC_Core.Attribute> resultAtrList = new ObservableCollection<VMMC_Core.Attribute>();
+
+            foreach (DataTable resultDT in resultDtList)
+            {
+                for (int i = 0; i < resultDT.Rows.Count; i++)
                 {
 
-                }
+                    string attributeNameStr = ""; //
+                    string attributeTypeStr = ""; //
+                    string attributeIsMultiValueStr = ""; //
 
+
+                    for (int j = 0; j < resultDT.Columns.Count; j++)
+                    {
+                        string columnName = resultDT.Columns[j].ColumnName.Replace("\n", "");
+
+                        switch (columnName)
+                        {
+                            case "char_name":
+                                attributeNameStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "char_data_type":
+                                attributeTypeStr = resultDT.Rows[i][j].ToString().Replace("''", "\"").Replace("\r", "\n").Trim();
+                                break;
+
+                            case "multi_valued":
+                                attributeIsMultiValueStr = resultDT.Rows[i][j].ToString().Replace("''", "\"").Replace("\r", "\n").Trim();
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+
+                    VMMC_Core.Attribute atr = new VMMC_Core.Attribute(sessionInfo).SearchAttribute(attributeNameStr);
+
+                    if (atr == null)
+                    {
+                        atr = new VMMC_Core.Attribute(sessionInfo);
+                        atr.AttributeId = Guid.NewGuid();
+                        atr.AttributeName = attributeNameStr;
+                        if (attributeIsMultiValueStr == "Y") atr.AllowMultiValues = true;
+                        else atr.AllowMultiValues = false;
+
+                        switch (attributeTypeStr)
+                        {
+                            case "CH":
+                                atr.AtributeDataTypeId = 1;
+                                atr.MeasureGroupId = Guid.Parse("794D45ED-88CC-ED11-A60C-00155D03FA01"); //Безразмерная величина
+                                break;
+
+                            case "NU":
+                                atr.AtributeDataTypeId = 2;
+                                atr.MeasureGroupId = Guid.Parse("794D45ED-88CC-ED11-A60C-00155D03FA01"); //Безразмерная величина
+                                break;
+
+                            case "DA":
+                                atr.AtributeDataTypeId = 3;
+                                atr.MeasureGroupId = Guid.Parse("C2A88F36-AA22-ED11-A60A-00155D03FA01"); //Время
+                                break;
+
+                            case "PD":
+                                atr.AtributeDataTypeId = 3;
+                                atr.IsEnum = true;
+                                atr.MeasureGroupId = Guid.Parse("794D45ED-88CC-ED11-A60C-00155D03FA01"); //Безразмерная величина
+
+                                break;
+
+                            default:
+                                break;
+                        }
+                        resultAtrList.Add(atr);
+                        atr.CreateDBAttribute();
+                        
+                    }
+                }
             }
-            treeItemsList = sortTreeItemsList;
-            excelParserViewModel.DocumentsCollection = docList;
-            excelParserViewModel.TagsCollection = tagList;
-            excelParserViewModel.RelationshipsCollection = relList;
-            excelParserViewModel.TreeItemsCollection = treeItemsList;
-            excelParserViewModel.AttributeObjectValuesCollection = atrList;
+
+
 
 
             return excelParserViewModel;
@@ -2449,7 +2576,7 @@ namespace VMMC_ExcelParcer
                         {
                             foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
                             {
-                                AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                             }
                         }
                         if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
@@ -2587,7 +2714,7 @@ namespace VMMC_ExcelParcer
                         {
                             foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
                             {
-                                AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                             }
                         }
                         if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
@@ -2675,7 +2802,7 @@ namespace VMMC_ExcelParcer
                     if (docRevisionStr != "" && docRevisionStr != "NULL")
                     {
                         if (newDoc.Revisions == null) newDoc.Revisions = new ObservableCollection<Revision>();
-                        newDoc.Revisions.Add(new VMMC_Core.Revision(sessionInfo) { DocumentId = newDoc.DocumentId, Number = int.Parse(docRevisionStr) });
+                        newDoc.Revisions.Add(new VMMC_Core.Revision(sessionInfo) { RevisionId = Guid.NewGuid(), DocumentId = newDoc.DocumentId, Number = int.Parse(docRevisionStr) });
                     }
                     docList.Add(newDoc);
 
@@ -2815,7 +2942,7 @@ namespace VMMC_ExcelParcer
                         {
                             foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
                             {
-                                AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                             }
                         }
                         if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
@@ -3069,7 +3196,7 @@ namespace VMMC_ExcelParcer
                         {
                             foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
                             {
-                                AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                             }
                         }
                         if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;

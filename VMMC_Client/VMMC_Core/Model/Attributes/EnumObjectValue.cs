@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -56,9 +57,9 @@ namespace VMMC_Core
 
             }
         }
-        public List<VMMC_Core.EnumObjectValue> GetEnumObjectValuesList(Guid valueId)
+        public ObservableCollection<VMMC_Core.EnumObjectValue> GetEnumObjectValuesList(Guid valueId)
         {
-            List<VMMC_Core.EnumObjectValue> enumObjectValuesList = new List<VMMC_Core.EnumObjectValue>();
+            ObservableCollection<VMMC_Core.EnumObjectValue> enumObjectValuesList = new ObservableCollection<VMMC_Core.EnumObjectValue>();
 
             // строка подключения к БД
             string connectionString = @"Server=" + sessionInfo.ServerName + ";Integrated security=SSPI;database=" + sessionInfo.DataBaseName;
@@ -90,14 +91,14 @@ namespace VMMC_Core
                 return enumObjectValuesList;
             }
         }
-        public List<VMMC_Core.EnumObjectValue> GetAvailibleEnumObjectValuesList(Guid valueId)
+        public ObservableCollection<VMMC_Core.EnumObjectValue> GetAvailibleEnumObjectValuesList(Guid valueId)
         {
-            List<VMMC_Core.EnumAttributeValue> availibleEnumAttributeValueList = new VMMC_Core.EnumAttributeValue(sessionInfo).GetAvailableEnumAttributeValuesList(valueId);
+            ObservableCollection<VMMC_Core.EnumAttributeValue> availibleEnumAttributeValueList = new VMMC_Core.EnumAttributeValue(sessionInfo).GetAvailableEnumAttributeValuesList(valueId);
             
 
             if (availibleEnumAttributeValueList.Count > 0)
             {
-                List<VMMC_Core.EnumObjectValue> availibleEnumObjectValuesList = new List<VMMC_Core.EnumObjectValue>();
+                ObservableCollection<VMMC_Core.EnumObjectValue> availibleEnumObjectValuesList = new ObservableCollection<VMMC_Core.EnumObjectValue>();
 
                 foreach (VMMC_Core.EnumAttributeValue enumAttributeValue in availibleEnumAttributeValueList)
                 {

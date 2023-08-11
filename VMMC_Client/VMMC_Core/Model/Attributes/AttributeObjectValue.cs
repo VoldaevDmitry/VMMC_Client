@@ -23,10 +23,29 @@ namespace VMMC_Core
         public decimal? NumberValue { get; set; }
         public string StringValue { get; set; }
         public DateTime? DateTimeValue { get; set; }
-        public List<VMMC_Core.EnumObjectValue> EnumObjectValuesList { get; set; }
+        public ObservableCollection<VMMC_Core.EnumObjectValue> EnumObjectValuesList { get; set; }
         public VMMC_Core.EnumObjectValue EnumObjectValue { get; set; }
-        public List<VMMC_Core.EnumAttributeValue> AvailibleEnumAttributeValueList { get; set; }
-        public List<VMMC_Core.EnumObjectValue> AvailibleValuesList { get; set; }
+        public ObservableCollection<VMMC_Core.EnumAttributeValue> AvailibleEnumAttributeValueList { get; set; }
+        public ObservableCollection<VMMC_Core.EnumObjectValue> AvailibleValuesList { get; set; }
+        public VMMC_Core.CommonControls.AttributeObjectValueViewModel AttributeObjectValueViewModel
+        {
+            get
+            {
+                VMMC_Core.AttributeObjectValue aov = new AttributeObjectValue(sessionInfo);
+                aov.AttributeObjectValueId = AttributeObjectValueId;
+                aov.Attribute = Attribute;
+                aov.Object = Object;
+                aov.NumberValue = NumberValue;
+                aov.StringValue = StringValue;
+                aov.DateTimeValue = DateTimeValue;
+                aov.EnumObjectValuesList = EnumObjectValuesList;
+                aov.EnumObjectValue = EnumObjectValue;
+                aov.AvailibleEnumAttributeValueList = AvailibleEnumAttributeValueList;
+                aov.AvailibleValuesList = AvailibleValuesList;
+                return new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov);
+            }
+        }
+
         public Guid? MeasureId { get; set; }
         public string DisplayValue { get; set; }
         public string Status { get; set; }
@@ -233,7 +252,7 @@ FROM [dbo].[AttributeObjectValues] WHERE [AttributeId] = '" + attributeId.ToStri
                                 {
                                     //EnumObjectValue newEnumObjectValue = new EnumObjectValue(sessionInfo) { EnumObjectValueId = Guid.NewGuid(), AttributeObjectValue = newAttributeObjectValue, EnumAttributeValue = new EnumAttributeValue(sessionInfo) { EnumAttributeValueId = Guid.Parse(dr["AttributeId"].ToString()) } };
                                     EnumObjectValue newEnumObjectValue = new EnumObjectValue(sessionInfo) { EnumObjectValueId = Guid.NewGuid(), AttributeObjectValue = newAttributeObjectValue, EnumAttributeValue = new EnumAttributeValue(sessionInfo).GetEnumAttributeValueById(Guid.Parse(dr["EnumId"].ToString())) };
-                                    newAttributeObjectValue.EnumObjectValuesList = new List<EnumObjectValue>();
+                                    newAttributeObjectValue.EnumObjectValuesList = new ObservableCollection<EnumObjectValue>();
                                     newAttributeObjectValue.EnumObjectValuesList.Add(newEnumObjectValue);
 
                                     newAttributeObjectValue.EnumObjectValue = newEnumObjectValue;

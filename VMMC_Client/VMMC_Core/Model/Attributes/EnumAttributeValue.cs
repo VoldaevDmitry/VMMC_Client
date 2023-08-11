@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics.Eventing.Reader;
@@ -139,9 +140,9 @@ namespace VMMC_Core
                 return enumAttributeValueList;
             }
         }
-        public List<VMMC_Core.EnumAttributeValue> GetAvailableEnumAttributeValuesList(Guid attributeId)
+        public ObservableCollection<VMMC_Core.EnumAttributeValue> GetAvailableEnumAttributeValuesList(Guid attributeId)
         {
-            List<VMMC_Core.EnumAttributeValue> enumAttributeValueList = new List<VMMC_Core.EnumAttributeValue>();
+            ObservableCollection<VMMC_Core.EnumAttributeValue> enumAttributeValueList = new ObservableCollection<VMMC_Core.EnumAttributeValue>();
 
             // строка подключения к БД
             string connectionString = @"Server=" + sessionInfo.ServerName + ";Integrated security=SSPI;database=" + sessionInfo.DataBaseName;

@@ -31,6 +31,7 @@
                         <MenuItem Header="Выбрать файл набора документов..." Command="{Binding GetBKFILLDocumentsFromExcelCommand}"/>
                         <MenuItem Header="Выбрать файл набора отношений документов..." Command="{Binding GetBKFILLDocumentsRelationshipFromExcelCommand}"/>
                         <MenuItem Header="Выбрать файл набора файлов документов..." Command="{Binding GetBKFILLDocumentsFilesFromExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл набора атрибутов для тегов..." Command="{Binding GetBKFILLAttributeFromExcelCommand}"/>
                     </MenuItem>
                     <MenuItem Header="Для Юры...">
                         <MenuItem Header="Выбрать файл реестра РД по ВММК..." Command="{Binding GetComplektsWithRevisionsListCommand}"/>

@@ -19,23 +19,23 @@
                 <Grid.Style>
                     <Style>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding NumberValue}" Value="{x:Null}">
+                            <DataTrigger Binding="{Binding AttributeObjectValue.NumberValue}" Value="{x:Null}">
                                 <Setter Property="Grid.Visibility" Value="Collapsed" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <TextBox Grid.Column="0" Text="{Binding NumberValue}" IsReadOnly="True"/>
+                <TextBox Grid.Column="0" Text="{Binding AttributeObjectValue.NumberValue}" IsReadOnly="True"/>
                 <ComboBox Grid.Column="1"/>
             </Grid>
-            <DatePicker SelectedDate ="{Binding DateTimeValue}" IsEnabled="False" >
+            <DatePicker SelectedDate ="{Binding AttributeObjectValue.DateTimeValue}" IsEnabled="False" >
                 <DatePicker.Style>
                     <Style>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding DateTimeValue}" Value="{x:Null}">
+                            <DataTrigger Binding="{Binding AttributeObjectValue.DateTimeValue}" Value="{x:Null}">
                                 <Setter Property="DatePicker.Visibility" Value="Collapsed" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding DateTimeValue}" Value="{x:Null}">
+                            <DataTrigger Binding="{Binding AttributeObjectValue.DateTimeValue}" Value="{x:Null}">
                                 <Setter Property="DatePicker.IsEnabled" Value="True" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -43,14 +43,14 @@
                 </DatePicker.Style>
                 
             </DatePicker>
-            <TextBox Text="{Binding StringValue}" IsReadOnly="True">
+            <TextBox Text="{Binding AttributeObjectValue.StringValue}" IsReadOnly="True">
                 <TextBox.Style>
                     <Style>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding StringValue}" Value="{x:Null}">
+                            <DataTrigger Binding="{Binding AttributeObjectValue.StringValue}" Value="{x:Null}">
                                 <Setter Property="TextBox.Visibility" Value="Collapsed" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding StringValue}" Value="{x:Null}">
+                            <DataTrigger Binding="{Binding AttributeObjectValue.StringValue}" Value="{x:Null}">
                                 <Setter Property="TextBox.IsReadOnly" Value="False" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -58,14 +58,14 @@
                 </TextBox.Style>
             </TextBox>
 
-            <ComboBox ItemsSource="{Binding AvailibleValuesList}" DisplayMemberPath="EnumAttributeValue.EnumValueStr" SelectedValue="{Binding EnumObjectValue}" SelectedValuePath="EnumAttributeValue.EnumValueStr" >
+            <ComboBox ItemsSource="{Binding AttributeObjectValue.AvailibleValuesList}" DisplayMemberPath="EnumAttributeValue.EnumValueStr" SelectedValue="{Binding AttributeObjectValue.EnumObjectValue}" SelectedValuePath="EnumAttributeValue.EnumValueStr" >
                 <ComboBox.Style>
                     <Style>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Attribute.AllowMultiselect}" Value="true">
+                            <DataTrigger Binding="{Binding AttributeObjectValue.Attribute.AllowMultiselect}" Value="true">
                                 <Setter Property="TextBlock.Visibility" Value="Collapsed" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Attribute.IsEnum}" Value="false">
+                            <DataTrigger Binding="{Binding AttributeObjectValue.Attribute.IsEnum}" Value="false">
                                 <Setter Property="TextBlock.Visibility" Value="Collapsed" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -74,11 +74,11 @@
             </ComboBox>
 
             <StackPanel Orientation="Vertical">
-                <sdl:MultiSelectComboBox x:Name="MultiSelectComboBox" ItemsSource="{Binding AvailibleValuesList}" FilterTextChanged="MultiSelectComboBox_FilterTextChanged" SelectedItems="{Binding EnumObjectValuesList}" IsEditable="true" SelectionMode="Multiple"   sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}">
+                <sdl:MultiSelectComboBox x:Name="MultiSelectComboBox" ItemsSource="{Binding AttributeObjectValue.AvailibleValuesList}" FilterTextChanged="MultiSelectComboBox_FilterTextChanged" SelectedItems="{Binding AttributeObjectValue.EnumObjectValuesList}" IsEditable="true" SelectionMode="Multiple"   sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedItemsChangedCommand}">
                     <sdl:MultiSelectComboBox.SelectedItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                <TextBlock Text="{Binding Path=EnumAttributeValue.EnumValueStr}" />
+                                <TextBlock Text="{Binding Path=AttributeObjectValue.EnumAttributeValue.EnumValueStr}" />
                             </Grid>
                         </DataTemplate>
                     </sdl:MultiSelectComboBox.SelectedItemTemplate>
@@ -86,7 +86,7 @@
                     <sdl:MultiSelectComboBox.DropdownItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                <TextBlock Text="{Binding Path=EnumAttributeValue.EnumValueStr}" />
+                                <TextBlock Text="{Binding Path=AttributeObjectValue.EnumAttributeValue.EnumValueStr}" />
                             </Grid>
                         </DataTemplate>
                     </sdl:MultiSelectComboBox.DropdownItemTemplate>
@@ -95,10 +95,10 @@
                 <StackPanel.Style>
                     <Style>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Attribute.AllowMultiselect}" Value="False">
+                            <DataTrigger Binding="{Binding AttributeObjectValue.Attribute.AllowMultiselect}" Value="False">
                                 <Setter Property="TextBlock.Visibility" Value="Collapsed" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Attribute.IsEnum}" Value="true">
+                            <DataTrigger Binding="{Binding AttributeObjectValue.Attribute.IsEnum}" Value="true">
                                 <Setter Property="TextBlock.Visibility" Value="Collapsed" />
                             </DataTrigger>
                         </Style.Triggers>

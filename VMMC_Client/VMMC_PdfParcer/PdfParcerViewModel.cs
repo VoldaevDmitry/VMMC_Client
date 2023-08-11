@@ -392,7 +392,7 @@ namespace VMMC_PdfParcer
                 {
                     foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
                     {
-                        AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                        //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                     }
                 }
                 if (TreeItemsCollection == null) TreeItemsCollection = newPdfParcerViewModel.TreeItemsCollection;

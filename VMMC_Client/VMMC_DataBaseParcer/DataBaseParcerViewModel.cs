@@ -179,7 +179,7 @@ where documentsRD.[ClassId] = '715574FF-30E5-4911-80E1-44CCB68212A6' and treeIte
 
             foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
             {
-                AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
             }
         }
 

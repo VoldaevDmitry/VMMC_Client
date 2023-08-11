@@ -205,16 +205,16 @@
                                     RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource ="{Binding AttributeObjectValuesCollection}" >
                             </DataGrid>-->
                             <DataGrid Grid.Row="2" x:Name="AttributesObjectValueGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
-                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource ="{Binding AttributeObjectValueViewModelCollection}">
+                                    RowBackground="LightGray" AlternatingRowBackground="White" CanUserAddRows="False" ItemsSource ="{Binding AttributeObjectValuesCollection}">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="ObjectCode" Binding="{Binding AttributeObjectValue.Object.ObjectId}" Width="*" />
-                                    <DataGridTextColumn Header="ObjectCode" Binding="{Binding AttributeObjectValue.Object.ObjectCode}" Width="*" />
-                                    <DataGridTextColumn Header="StringValue" Binding="{Binding AttributeObjectValue.Attribute.AttributeName}" Width="*" />
+                                    <DataGridTextColumn Header="ObjectCode" Binding="{Binding Object.ObjectId}" Width="*" />
+                                    <DataGridTextColumn Header="ObjectCode" Binding="{Binding Object.ObjectCode}" Width="*" />
+                                    <DataGridTextColumn Header="StringValue" Binding="{Binding Attribute.AttributeName}" Width="*" />
                                     <DataGridTemplateColumn>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
-                                                    <uc:AttributeObjectValueView DataContext="{Binding AttributeObjectValue}"/>
+                                                    <uc:AttributeObjectValueView DataContext="{Binding AttributeObjectValueViewModel}"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>

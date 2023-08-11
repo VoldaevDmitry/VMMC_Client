@@ -24,7 +24,7 @@ namespace VMMC_Core.CommonControls
             {
                 foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
                 {
-                    AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel() { AttributeObjectValue = aov });
+                    //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                 }
             }
         }

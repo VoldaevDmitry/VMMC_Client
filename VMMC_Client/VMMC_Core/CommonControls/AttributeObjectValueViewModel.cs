@@ -10,6 +10,7 @@ namespace VMMC_Core.CommonControls
 {
     public class AttributeObjectValueViewModel : INotifyPropertyChanged
     {
+      
         public VMMC_Core.AttributeObjectValue attributeObjectValue;
         public VMMC_Core.AttributeObjectValue AttributeObjectValue
         {
@@ -21,6 +22,10 @@ namespace VMMC_Core.CommonControls
             }
         }
 
+        public AttributeObjectValueViewModel(VMMC_Core.AttributeObjectValue attrObjectValue)
+        {
+            AttributeObjectValue = attrObjectValue;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnAttributeObjectValuePropertyChanged([CallerMemberName] string prop = "")
