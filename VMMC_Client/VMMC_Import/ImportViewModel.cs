@@ -486,7 +486,7 @@ namespace VMMC_Import
             if (ComplektsCollection != null) await Task.Run(() => CheckComplektCollection());
             if (TagsCollection != null) await Task.Run(() => CheckTagCollection());
             if (RelationshipsCollection != null) await Task.Run(() => CheckRelationshipCollection());
-            if (FilesCollection != null) await Task.Run(() => CheckFilesCollection());
+            if (FilesCollection != null) await Task.Run(() => CheckFilesCollection(true));
 
         }
         public void CheckDocumentCollection()
@@ -583,20 +583,21 @@ namespace VMMC_Import
                 }
             }
         }
-        public void CheckFilesCollection()
+        public void CheckFilesCollection(bool ignoreChecksum)
         {
             ObservableCollection<VMMC_Core.Files> dbComCollection = new VMMC_Core.Files(sessionInfo).GetDbFiles();
             foreach (VMMC_Core.Files files in FilesCollection)
             {
-                VMMC_Core.Files dbFiles = dbComCollection.Where(x => x.Checksum == files.Checksum).FirstOrDefault();
-                if (dbFiles != null)
+                VMMC_Core.Files existDbFile = dbComCollection.Where(x => x.RevisionId == files.RevisionId && x.FileName == files.FileName).FirstOrDefault();
+                if(existDbFile == null && !ignoreChecksum) existDbFile = dbComCollection.Where(x => x.Checksum == files.Checksum).FirstOrDefault();
+                if (existDbFile != null)
                 {
-                    files.FileId = dbFiles.FileId;
-                    files.FileGuid = dbFiles.FileGuid;
-                    files.RevisionId = dbFiles.RevisionId;
-                    files.FileName = dbFiles.FileName;
-                    files.FileSize = dbFiles.FileSize;
-                    files.FileType = dbFiles.FileType;
+                    files.FileId = existDbFile.FileId;
+                    files.FileGuid = existDbFile.FileGuid;
+                    files.RevisionId = existDbFile.RevisionId;
+                    files.FileName = existDbFile.FileName;
+                    files.FileSize = existDbFile.FileSize;
+                    files.FileType = existDbFile.FileType;
                     files.StatusInfo = "файл существует в БД";
                     files.IsExistInDB = true;
                 }
@@ -763,8 +764,10 @@ namespace VMMC_Import
             {
                 if (RevisionsCollection.Count > 0)
                 {
+                    int i = 0;
                     foreach (VMMC_Core.Revision revision in RevisionsCollection)
                     {
+                        i++;
                         if (!revision.IsExistInDB)
                         {
                             revision.CreateDBRevision();
@@ -795,10 +798,12 @@ namespace VMMC_Import
             {
                 if (FilesCollection.Count > 0)
                 {
+                    int i = 0;
                     foreach (VMMC_Core.Files files in FilesCollection)
                     {
+                        i++;
                         if (!files.IsExistInDB)
-                            files.CreateDbFile();
+                            files.CreateDbFile(true);
                     }
                 }
             }

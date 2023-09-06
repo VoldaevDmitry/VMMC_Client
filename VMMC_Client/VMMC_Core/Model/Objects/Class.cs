@@ -57,9 +57,10 @@ namespace VMMC_Core
                         newClass.SystemTypeId = int.Parse(dr["SystemTypeId"].ToString());
                         newClass.ClassAbbreviation = dr["ClassAbbreviation"].ToString();
                     }
+                    return newClass;
                 }
 
-                return newClass;
+                else return null;
             }
         }
         public ObservableCollection<VMMC_Core.Class> getDbClassList()

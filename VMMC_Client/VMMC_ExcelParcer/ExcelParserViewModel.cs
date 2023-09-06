@@ -215,6 +215,16 @@ namespace VMMC_ExcelParcer
             }
         }
 
+        private VMMC_Core.RelayCommand getBKFILLDocumentsAttributesFromExcelCommand;
+        public VMMC_Core.RelayCommand GetBKFILLDocumentsAttributesFromExcelCommand
+        {
+            get
+            {
+                return getBKFILLDocumentsAttributesFromExcelCommand ??
+                  (getBKFILLDocumentsAttributesFromExcelCommand = new RelayCommand(obj => { GetBKFILLDocumentsAttributesFromExcel(); }));
+            }
+        }
+
         private VMMC_Core.RelayCommand getBKFILLDocTreeFromExcelCommand;
         public VMMC_Core.RelayCommand GetBKFILLDocTreeFromExcelCommand
         {
@@ -232,6 +242,16 @@ namespace VMMC_ExcelParcer
             {
                 return getBKFILLDocumentsFromExcelCommand ??
                   (getBKFILLDocumentsFromExcelCommand = new RelayCommand(obj => { GetBKFILLDocumentsFromExcel(); }));
+            }
+        }
+
+        private VMMC_Core.RelayCommand getBKFILLDocDocFromExcelCommand;
+        public VMMC_Core.RelayCommand GetBKFILLDocDocFromExcelCommand
+        {
+            get
+            {
+                return getBKFILLDocDocFromExcelCommand ??
+                  (getBKFILLDocDocFromExcelCommand = new RelayCommand(obj => { GetBKFILLDocDocFromExcel(); }));
             }
         }
 
@@ -255,13 +275,13 @@ namespace VMMC_ExcelParcer
             }
         }
 
-        private VMMC_Core.RelayCommand getBKFILLTagsEnumAttributeValuesFromExcelCommand;
-        public VMMC_Core.RelayCommand GetBKFILLTagsEnumAttributeValuesFromExcelCommand
+        private VMMC_Core.RelayCommand getBKFILLEnumAttributeValuesFromExcelCommand;
+        public VMMC_Core.RelayCommand GetBKFILLEnumAttributeValuesFromExcelCommand
         {
             get
             {
-                return getBKFILLTagsEnumAttributeValuesFromExcelCommand ??
-                  (getBKFILLTagsEnumAttributeValuesFromExcelCommand = new RelayCommand(obj => { GetBKFILLTagsEnumAttributeValuesFromExcel(); }));
+                return getBKFILLEnumAttributeValuesFromExcelCommand ??
+                  (getBKFILLEnumAttributeValuesFromExcelCommand = new RelayCommand(obj => { GetBKFILLEnumAttributeValuesFromExcel(); }));
             }
         }
 
@@ -2277,7 +2297,7 @@ namespace VMMC_ExcelParcer
             //DataContext = excelParserViewModel;
             //Documents_DataGrid.ItemsSource = excelParserViewModel.DocumentsCollection;
         }
-        private void GetBKFILLTagsEnumAttributeValuesFromExcel()
+        private void GetBKFILLEnumAttributeValuesFromExcel()
         {
             using (var dialog = new System.Windows.Forms.OpenFileDialog())
             {
@@ -2298,7 +2318,7 @@ namespace VMMC_ExcelParcer
                     {
                         AttributeObjectValueViewModelCollection = new ObservableCollection<VMMC_Core.CommonControls.AttributeObjectValueViewModel>();
 
-                        ExcelParserViewModel newExcelParserViewModel = GetBKFILLTagsEnumAttributeValuesFromExcel(fileName);
+                        ExcelParserViewModel newExcelParserViewModel = GetBKFILLEnumAttributeValuesFromExcel(fileName);
 
                         if (DocumentsCollection == null) DocumentsCollection = newExcelParserViewModel.DocumentsCollection;
                         else foreach (VMMC_Core.Document document in newExcelParserViewModel.DocumentsCollection) DocumentsCollection.Add(document);
@@ -2328,7 +2348,7 @@ namespace VMMC_ExcelParcer
                 }
             }
         }
-        public ExcelParserViewModel GetBKFILLTagsEnumAttributeValuesFromExcel(string FileName)
+        public ExcelParserViewModel GetBKFILLEnumAttributeValuesFromExcel(string FileName)
         {
             ExcelParserViewModel excelParserViewModel = new ExcelParserViewModel(sessionInfo);
 
@@ -2512,7 +2532,7 @@ namespace VMMC_ExcelParcer
                                 break;
 
                             case "PD":
-                                atr.AtributeDataTypeId = 3;
+                                atr.AtributeDataTypeId = 1;
                                 atr.IsEnum = true;
                                 atr.MeasureGroupId = Guid.Parse("794D45ED-88CC-ED11-A60C-00155D03FA01"); //Безразмерная величина
 
@@ -2529,6 +2549,224 @@ namespace VMMC_ExcelParcer
             }
 
 
+
+
+            return excelParserViewModel;
+            //DataContext = excelParserViewModel;
+            //Documents_DataGrid.ItemsSource = excelParserViewModel.DocumentsCollection;
+        }
+        private void GetBKFILLDocumentsAttributesFromExcel()
+        {
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                dialog.Multiselect = true;
+
+                DocumentsCollection = null;
+                ComplektsCollection = null;
+                TagsCollection = null;
+                TreeItemsCollection = null;
+                RelationshipsCollection = null;
+
+                dialog.ShowDialog();
+
+
+                if (dialog.FileNames != null)
+                {
+                    foreach (string fileName in dialog.FileNames)
+                    {
+                        AttributeObjectValueViewModelCollection = new ObservableCollection<VMMC_Core.CommonControls.AttributeObjectValueViewModel>();
+
+                        ExcelParserViewModel newExcelParserViewModel = GetBKFILLDocumentsAttributesFromExcel(fileName);
+
+                        if (DocumentsCollection == null) DocumentsCollection = newExcelParserViewModel.DocumentsCollection;
+                        else foreach (VMMC_Core.Document document in newExcelParserViewModel.DocumentsCollection) DocumentsCollection.Add(document);
+
+                        if (TagsCollection == null) TagsCollection = newExcelParserViewModel.TagsCollection;
+                        else foreach (VMMC_Core.Tag tag in newExcelParserViewModel.TagsCollection) TagsCollection.Add(tag);
+
+                        if (ComplektsCollection == null) ComplektsCollection = newExcelParserViewModel.ComplektsCollection;
+                        else foreach (VMMC_Core.Complekt complekt in newExcelParserViewModel.ComplektsCollection) ComplektsCollection.Add(complekt);
+
+                        if (RelationshipsCollection == null) RelationshipsCollection = newExcelParserViewModel.RelationshipsCollection;
+                        else foreach (VMMC_Core.Relationship relationship in newExcelParserViewModel.RelationshipsCollection) RelationshipsCollection.Add(relationship);
+
+                        if (AttributeObjectValuesCollection == null) AttributeObjectValuesCollection = newExcelParserViewModel.AttributeObjectValuesCollection;
+                        else foreach (VMMC_Core.AttributeObjectValue attributeObjectValue in newExcelParserViewModel.AttributeObjectValuesCollection) AttributeObjectValuesCollection.Add(attributeObjectValue);
+                        if (AttributeObjectValuesCollection != null)
+                        {
+                            foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
+                            {
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
+                            }
+                        }
+                        if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
+                        else foreach (VMMC_Core.TreeItem treeItem in newExcelParserViewModel.TreeItemsCollection) TreeItemsCollection.Add(treeItem);
+
+                    }
+                }
+            }
+        }
+        public ExcelParserViewModel GetBKFILLDocumentsAttributesFromExcel(string FileName)
+        {
+            ExcelParserViewModel excelParserViewModel = new ExcelParserViewModel(sessionInfo);
+
+            ObservableCollection<DataTable> resultDtList = new VMMC_ExcelParcer.ImportFromExcel().ExcelToDataTable(FileName, true);
+            ObservableCollection<VMMC_Core.Document> docList = new ObservableCollection<VMMC_Core.Document>();
+            ObservableCollection<VMMC_Core.Tag> tagList = new ObservableCollection<VMMC_Core.Tag>();
+            ObservableCollection<VMMC_Core.Relationship> relList = new ObservableCollection<VMMC_Core.Relationship>();
+            ObservableCollection<VMMC_Core.TreeItem> treeItemsList = new ObservableCollection<VMMC_Core.TreeItem>();
+            ObservableCollection<VMMC_Core.AttributeObjectValue> atrList = new ObservableCollection<VMMC_Core.AttributeObjectValue>();
+
+
+            foreach (DataTable resultDT in resultDtList)
+            {
+                for (int i = 0; i < resultDT.Rows.Count; i++)
+                {
+                    string docCodeStr = ""; //
+                    string docNameStr = ""; //
+                    string docClassCodeStr = ""; //
+
+                    string attributeNameStr = ""; //
+                    string attributeTypeStr = ""; //
+                    string attributeCharValueStr = ""; //
+                    string attributeDateValueStr = ""; //
+                    string attributeNumberValueStr = ""; //
+
+
+
+
+
+                    for (int j = 0; j < resultDT.Columns.Count; j++)
+                    {
+                        string columnName = resultDT.Columns[j].ColumnName.Replace("\n", "");
+
+                        switch (columnName)
+                        {
+                            case "code":
+                                docCodeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "name":
+                                docNameStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "char_name":
+                                attributeNameStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "char_data_type":
+                                attributeTypeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "char_value":
+                                attributeCharValueStr = resultDT.Rows[i][j].ToString().Replace("''", "\"").Replace("'", "\"").Replace("\r", "\n").Trim();
+                                break;
+
+                            case "date_value":
+                                attributeDateValueStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "number_value":
+                                attributeNumberValueStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+
+
+                    VMMC_Core.Document doc = new VMMC_Core.Document(sessionInfo).GetDocument(docCodeStr);
+                    if (doc != null)
+                    {
+                        docList.Add(doc);
+
+                        VMMC_Core.Attribute atr = new VMMC_Core.Attribute(sessionInfo).SearchAttribute(attributeNameStr);
+
+                        if (atr != null)
+                        {
+                            VMMC_Core.AttributeObjectValue existAOV = new VMMC_Core.AttributeObjectValue(sessionInfo).GetAttributeObjectValue(atr.AttributeId, doc.DocumentId);
+
+
+                            if (existAOV == null || atr.AllowMultiValues)
+                            {
+
+                                VMMC_Core.AttributeObjectValue newAOV = new VMMC_Core.AttributeObjectValue(sessionInfo)
+                                {
+                                    AttributeObjectValueId = Guid.NewGuid(),
+                                    Attribute = atr,
+                                    Object = new VMMC_Core.DbObject(sessionInfo).GetObject(doc.DocumentId),
+                                };
+
+                                switch (attributeTypeStr)
+                                {
+                                    case "CH":
+                                        if (attributeCharValueStr != "" && attributeCharValueStr != "NULL") newAOV.StringValue = attributeCharValueStr;
+                                        break;
+
+                                    case "DA":
+                                        if (attributeDateValueStr != "" && attributeDateValueStr != "NULL") newAOV.DateTimeValue = DateTime.Parse(attributeDateValueStr);
+                                        break;
+
+                                    case "NU":
+                                        if (attributeNumberValueStr != "" && attributeCharValueStr != "NULL") newAOV.NumberValue = decimal.Parse(attributeNumberValueStr);
+                                        break;
+
+                                    case "PD":
+                                        if (attributeCharValueStr != "" && attributeCharValueStr != "NULL")
+                                        {
+                                            VMMC_Core.EnumAttributeValue eav = new VMMC_Core.EnumAttributeValue(sessionInfo).GetEnumAttributeValue(newAOV.Attribute.AttributeId, attributeCharValueStr);
+                                            if (eav == null)
+                                            {
+                                                eav = new VMMC_Core.EnumAttributeValue(sessionInfo)
+                                                {
+                                                    EnumAttributeValueId = Guid.NewGuid(),
+                                                    AttributeId = newAOV.Attribute.AttributeId,
+                                                    EnumValueStr = attributeCharValueStr
+                                                };
+                                                eav.CreateDBEnumAttributeValue();
+                                                eav = new VMMC_Core.EnumAttributeValue(sessionInfo).GetEnumAttributeValue(newAOV.Attribute.AttributeId, attributeCharValueStr);
+                                            }
+
+                                            if (eav != null)
+                                            {
+                                                VMMC_Core.EnumObjectValue eov = new EnumObjectValue(sessionInfo).GetEnumObjectValue(newAOV.AttributeObjectValueId, eav.EnumAttributeValueId);
+                                                if (eov == null) eov = new EnumObjectValue(sessionInfo) { EnumObjectValueId = Guid.NewGuid(), AttributeObjectValue = newAOV, EnumAttributeValue = eav };
+
+                                                newAOV.EnumObjectValue = eov;
+                                                newAOV.AvailibleEnumAttributeValueList = new EnumAttributeValue(sessionInfo).GetAvailableEnumAttributeValuesList(newAOV.Attribute.AttributeId);
+                                                newAOV.AvailibleValuesList = new EnumObjectValue(sessionInfo).GetAvailibleEnumObjectValuesList(newAOV.Attribute.AttributeId);
+                                            }
+                                        }
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                                atrList.Add(newAOV);
+                            }
+                        }
+                    }
+                }
+            }
+
+            ObservableCollection<VMMC_Core.TreeItem> sortTreeItemsList = new ObservableCollection<VMMC_Core.TreeItem>();
+            foreach (VMMC_Core.TreeItem ti in treeItemsList)
+            {
+                VMMC_Core.TreeItem existti = sortTreeItemsList.Where(x => x.TreeItemCode == ti.TreeItemCode && x.Parent.TreeItemId == ti.Parent.TreeItemId).FirstOrDefault();
+                if (existti == null) sortTreeItemsList.Add(ti);
+                else
+                {
+
+                }
+
+            }
+            treeItemsList = sortTreeItemsList;
+            excelParserViewModel.DocumentsCollection = docList;
+            excelParserViewModel.TagsCollection = tagList;
+            excelParserViewModel.RelationshipsCollection = relList;
+            excelParserViewModel.TreeItemsCollection = treeItemsList;
+            excelParserViewModel.AttributeObjectValuesCollection = atrList;
 
 
             return excelParserViewModel;
@@ -2874,6 +3112,186 @@ namespace VMMC_ExcelParcer
                     //};
                     //relList.Add(tagSystem);
 
+
+                }
+            }
+
+            ObservableCollection<VMMC_Core.TreeItem> sortTreeItemsList = new ObservableCollection<VMMC_Core.TreeItem>();
+            foreach (VMMC_Core.TreeItem ti in treeItemsList)
+            {
+                VMMC_Core.TreeItem existti = sortTreeItemsList.Where(x => x.TreeItemCode == ti.TreeItemCode && x.Parent.TreeItemId == ti.Parent.TreeItemId).FirstOrDefault();
+                if (existti == null) sortTreeItemsList.Add(ti);
+                else
+                {
+
+                }
+
+            }
+            treeItemsList = sortTreeItemsList;
+            excelParserViewModel.DocumentsCollection = docList;
+            excelParserViewModel.TagsCollection = tagList;
+            excelParserViewModel.RelationshipsCollection = relList;
+            excelParserViewModel.TreeItemsCollection = treeItemsList;
+            excelParserViewModel.AttributeObjectValuesCollection = atrList;
+
+
+            return excelParserViewModel;
+            //DataContext = excelParserViewModel;
+            //Documents_DataGrid.ItemsSource = excelParserViewModel.DocumentsCollection;
+        }
+        private void GetBKFILLDocDocFromExcel()
+        {
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                dialog.Multiselect = true;
+
+                DocumentsCollection = null;
+                ComplektsCollection = null;
+                TagsCollection = null;
+                TreeItemsCollection = null;
+                RelationshipsCollection = null;
+
+                dialog.ShowDialog();
+
+
+                if (dialog.FileNames != null)
+                {
+                    foreach (string fileName in dialog.FileNames)
+                    {
+                        AttributeObjectValueViewModelCollection = new ObservableCollection<VMMC_Core.CommonControls.AttributeObjectValueViewModel>();
+
+                        ExcelParserViewModel newExcelParserViewModel = GetBKFILLDocDocFromExcel(fileName);
+
+                        if (DocumentsCollection == null) DocumentsCollection = newExcelParserViewModel.DocumentsCollection;
+                        else foreach (VMMC_Core.Document document in newExcelParserViewModel.DocumentsCollection) DocumentsCollection.Add(document);
+
+                        if (TagsCollection == null) TagsCollection = newExcelParserViewModel.TagsCollection;
+                        else foreach (VMMC_Core.Tag tag in newExcelParserViewModel.TagsCollection) TagsCollection.Add(tag);
+
+                        if (ComplektsCollection == null) ComplektsCollection = newExcelParserViewModel.ComplektsCollection;
+                        else foreach (VMMC_Core.Complekt complekt in newExcelParserViewModel.ComplektsCollection) ComplektsCollection.Add(complekt);
+
+                        if (RelationshipsCollection == null) RelationshipsCollection = newExcelParserViewModel.RelationshipsCollection;
+                        else foreach (VMMC_Core.Relationship relationship in newExcelParserViewModel.RelationshipsCollection) RelationshipsCollection.Add(relationship);
+
+                        if (AttributeObjectValuesCollection == null) AttributeObjectValuesCollection = newExcelParserViewModel.AttributeObjectValuesCollection;
+                        else foreach (VMMC_Core.AttributeObjectValue attributeObjectValue in newExcelParserViewModel.AttributeObjectValuesCollection) AttributeObjectValuesCollection.Add(attributeObjectValue);
+                        if (AttributeObjectValuesCollection != null)
+                        {
+                            foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
+                            {
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
+                            }
+                        }
+                        if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
+                        else foreach (VMMC_Core.TreeItem treeItem in newExcelParserViewModel.TreeItemsCollection) TreeItemsCollection.Add(treeItem);
+
+                    }
+                }
+            }
+        }
+        public ExcelParserViewModel GetBKFILLDocDocFromExcel(string FileName)
+        {
+            ExcelParserViewModel excelParserViewModel = new ExcelParserViewModel(sessionInfo);
+
+            ObservableCollection<DataTable> resultDtList = new VMMC_ExcelParcer.ImportFromExcel().ExcelToDataTable(FileName, true);
+            ObservableCollection<VMMC_Core.Document> docList = new ObservableCollection<VMMC_Core.Document>();
+            ObservableCollection<VMMC_Core.Tag> tagList = new ObservableCollection<VMMC_Core.Tag>();
+            ObservableCollection<VMMC_Core.Relationship> relList = new ObservableCollection<VMMC_Core.Relationship>();
+            ObservableCollection<VMMC_Core.TreeItem> treeItemsList = new ObservableCollection<VMMC_Core.TreeItem>();
+            ObservableCollection<VMMC_Core.AttributeObjectValue> atrList = new ObservableCollection<VMMC_Core.AttributeObjectValue>();
+
+
+            foreach (DataTable resultDT in resultDtList)
+            {
+                for (int i = 0; i < resultDT.Rows.Count; i++)
+                {
+
+                    string docCodeStr = ""; //
+                    string docNameStr = ""; //
+                    string docRevisionStr = ""; //
+                    string docClassCodeStr = ""; //
+
+
+                    string reldocCodeStr = ""; //
+                    string reldocRevisionStr = ""; //
+
+
+
+
+
+                    for (int j = 0; j < resultDT.Columns.Count; j++)
+                    {
+                        string columnName = resultDT.Columns[j].ColumnName.Replace("\n", "");
+
+                        switch (columnName)
+                        {
+                            case "prefix":
+                                docCodeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "title":
+                                docNameStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "revision":
+                                docRevisionStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "code":
+                                docClassCodeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "reldoc_prefix":
+                                reldocCodeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "reldoc_revision":
+                                reldocRevisionStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+
+                   // VMMC_Core.Document relDoc = new VMMC_Core.Document(sessionInfo).GetDocument(docCodeStr);
+
+                    VMMC_Core.Document relDoc = new VMMC_Core.Document(sessionInfo).GetDocument(reldocCodeStr);
+                    if (relDoc != null)
+                    {
+                        VMMC_Core.Document newDoc = new VMMC_Core.Document(sessionInfo).GetDocument(docCodeStr);
+                        if (newDoc == null)
+                        {
+                            newDoc = new VMMC_Core.Document(sessionInfo)
+                            {
+                                DocumentId = Guid.NewGuid(),
+                                DocumentCode = docCodeStr,
+                                DocumentName = docNameStr,
+                                DocumentClassId = new VMMC_Core.Class(sessionInfo).getClass(docClassCodeStr).ClassId
+
+                            };
+                        }
+                        if (docRevisionStr != "" && docRevisionStr != "NULL")
+                        {
+                            if (newDoc.Revisions == null) newDoc.Revisions = new ObservableCollection<Revision>();
+                            newDoc.Revisions.Add(new VMMC_Core.Revision(sessionInfo) { RevisionId = Guid.NewGuid(), DocumentId = newDoc.DocumentId, Number = int.Parse(docRevisionStr) });
+                        }
+                        docList.Add(newDoc);
+
+
+                        VMMC_Core.Relationship docDoc = new Relationship(sessionInfo)
+                        {
+                            RelationshipId = Guid.NewGuid(),
+                            LeftObject = new DbObject(sessionInfo) { ObjectId = relDoc.DocumentId },
+                            RightObject = new DbObject(sessionInfo) { ObjectId = newDoc.DocumentId },
+                            RelTypeId = new Relationship(sessionInfo).GetRelationshipTypeId("Документ-Документ")
+                        };
+                        relList.Add(docDoc);
+
+
+
+                    }
 
                 }
             }
@@ -3304,6 +3722,227 @@ namespace VMMC_ExcelParcer
             //DataContext = excelParserViewModel;
             //Documents_DataGrid.ItemsSource = excelParserViewModel.DocumentsCollection;
         }
+
+
+        private void GetBKFILLSystemsAttributesFromExcel()
+        {
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                dialog.Multiselect = true;
+
+                DocumentsCollection = null;
+                ComplektsCollection = null;
+                TagsCollection = null;
+                TreeItemsCollection = null;
+                RelationshipsCollection = null;
+
+                dialog.ShowDialog();
+
+
+                if (dialog.FileNames != null)
+                {
+                    foreach (string fileName in dialog.FileNames)
+                    {
+                        AttributeObjectValueViewModelCollection = new ObservableCollection<VMMC_Core.CommonControls.AttributeObjectValueViewModel>();
+
+                        ExcelParserViewModel newExcelParserViewModel = GetBKFILLDocumentsAttributesFromExcel(fileName);
+
+                        if (DocumentsCollection == null) DocumentsCollection = newExcelParserViewModel.DocumentsCollection;
+                        else foreach (VMMC_Core.Document document in newExcelParserViewModel.DocumentsCollection) DocumentsCollection.Add(document);
+
+                        if (TagsCollection == null) TagsCollection = newExcelParserViewModel.TagsCollection;
+                        else foreach (VMMC_Core.Tag tag in newExcelParserViewModel.TagsCollection) TagsCollection.Add(tag);
+
+                        if (ComplektsCollection == null) ComplektsCollection = newExcelParserViewModel.ComplektsCollection;
+                        else foreach (VMMC_Core.Complekt complekt in newExcelParserViewModel.ComplektsCollection) ComplektsCollection.Add(complekt);
+
+                        if (RelationshipsCollection == null) RelationshipsCollection = newExcelParserViewModel.RelationshipsCollection;
+                        else foreach (VMMC_Core.Relationship relationship in newExcelParserViewModel.RelationshipsCollection) RelationshipsCollection.Add(relationship);
+
+                        if (AttributeObjectValuesCollection == null) AttributeObjectValuesCollection = newExcelParserViewModel.AttributeObjectValuesCollection;
+                        else foreach (VMMC_Core.AttributeObjectValue attributeObjectValue in newExcelParserViewModel.AttributeObjectValuesCollection) AttributeObjectValuesCollection.Add(attributeObjectValue);
+                        if (AttributeObjectValuesCollection != null)
+                        {
+                            foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
+                            {
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
+                            }
+                        }
+                        if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
+                        else foreach (VMMC_Core.TreeItem treeItem in newExcelParserViewModel.TreeItemsCollection) TreeItemsCollection.Add(treeItem);
+
+                    }
+                }
+            }
+        }
+        public ExcelParserViewModel GetBKFILLSystemsAttributesFromExcel(string FileName)
+        {
+            ExcelParserViewModel excelParserViewModel = new ExcelParserViewModel(sessionInfo);
+
+            ObservableCollection<DataTable> resultDtList = new VMMC_ExcelParcer.ImportFromExcel().ExcelToDataTable(FileName, true);
+            ObservableCollection<VMMC_Core.Document> docList = new ObservableCollection<VMMC_Core.Document>();
+            ObservableCollection<VMMC_Core.Tag> tagList = new ObservableCollection<VMMC_Core.Tag>();
+            ObservableCollection<VMMC_Core.Relationship> relList = new ObservableCollection<VMMC_Core.Relationship>();
+            ObservableCollection<VMMC_Core.TreeItem> treeItemsList = new ObservableCollection<VMMC_Core.TreeItem>();
+            ObservableCollection<VMMC_Core.AttributeObjectValue> atrList = new ObservableCollection<VMMC_Core.AttributeObjectValue>();
+
+
+            foreach (DataTable resultDT in resultDtList)
+            {
+                for (int i = 0; i < resultDT.Rows.Count; i++)
+                {
+                    string docCodeStr = ""; //
+                    string docNameStr = ""; //
+                    string docClassCodeStr = ""; //
+
+                    string attributeNameStr = ""; //
+                    string attributeTypeStr = ""; //
+                    string attributeCharValueStr = ""; //
+                    string attributeDateValueStr = ""; //
+                    string attributeNumberValueStr = ""; //
+
+
+
+
+
+                    for (int j = 0; j < resultDT.Columns.Count; j++)
+                    {
+                        string columnName = resultDT.Columns[j].ColumnName.Replace("\n", "");
+
+                        switch (columnName)
+                        {
+                            case "code":
+                                docCodeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "name":
+                                docNameStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "char_name":
+                                attributeNameStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "char_data_type":
+                                attributeTypeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "char_value":
+                                attributeCharValueStr = resultDT.Rows[i][j].ToString().Replace("''", "\"").Replace("'", "\"").Replace("\r", "\n").Trim();
+                                break;
+
+                            case "date_value":
+                                attributeDateValueStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "number_value":
+                                attributeNumberValueStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+
+
+                    VMMC_Core.Document doc = new VMMC_Core.Document(sessionInfo).GetDocument(docCodeStr);
+                    if (doc != null)
+                    {
+                        docList.Add(doc);
+
+                        VMMC_Core.Attribute atr = new VMMC_Core.Attribute(sessionInfo).SearchAttribute(attributeNameStr);
+
+                        if (atr != null)
+                        {
+                            VMMC_Core.AttributeObjectValue existAOV = new VMMC_Core.AttributeObjectValue(sessionInfo).GetAttributeObjectValue(atr.AttributeId, doc.DocumentId);
+
+
+                            if (existAOV == null || atr.AllowMultiValues)
+                            {
+
+                                VMMC_Core.AttributeObjectValue newAOV = new VMMC_Core.AttributeObjectValue(sessionInfo)
+                                {
+                                    AttributeObjectValueId = Guid.NewGuid(),
+                                    Attribute = atr,
+                                    Object = new VMMC_Core.DbObject(sessionInfo).GetObject(doc.DocumentId),
+                                };
+
+                                switch (attributeTypeStr)
+                                {
+                                    case "CH":
+                                        if (attributeCharValueStr != "" && attributeCharValueStr != "NULL") newAOV.StringValue = attributeCharValueStr;
+                                        break;
+
+                                    case "DA":
+                                        if (attributeDateValueStr != "" && attributeDateValueStr != "NULL") newAOV.DateTimeValue = DateTime.Parse(attributeDateValueStr);
+                                        break;
+
+                                    case "NU":
+                                        if (attributeNumberValueStr != "" && attributeCharValueStr != "NULL") newAOV.NumberValue = decimal.Parse(attributeNumberValueStr);
+                                        break;
+
+                                    case "PD":
+                                        if (attributeCharValueStr != "" && attributeCharValueStr != "NULL")
+                                        {
+                                            VMMC_Core.EnumAttributeValue eav = new VMMC_Core.EnumAttributeValue(sessionInfo).GetEnumAttributeValue(newAOV.Attribute.AttributeId, attributeCharValueStr);
+                                            if (eav == null)
+                                            {
+                                                eav = new VMMC_Core.EnumAttributeValue(sessionInfo)
+                                                {
+                                                    EnumAttributeValueId = Guid.NewGuid(),
+                                                    AttributeId = newAOV.Attribute.AttributeId,
+                                                    EnumValueStr = attributeCharValueStr
+                                                };
+                                                eav.CreateDBEnumAttributeValue();
+                                                eav = new VMMC_Core.EnumAttributeValue(sessionInfo).GetEnumAttributeValue(newAOV.Attribute.AttributeId, attributeCharValueStr);
+                                            }
+
+                                            if (eav != null)
+                                            {
+                                                VMMC_Core.EnumObjectValue eov = new EnumObjectValue(sessionInfo).GetEnumObjectValue(newAOV.AttributeObjectValueId, eav.EnumAttributeValueId);
+                                                if (eov == null) eov = new EnumObjectValue(sessionInfo) { EnumObjectValueId = Guid.NewGuid(), AttributeObjectValue = newAOV, EnumAttributeValue = eav };
+
+                                                newAOV.EnumObjectValue = eov;
+                                                newAOV.AvailibleEnumAttributeValueList = new EnumAttributeValue(sessionInfo).GetAvailableEnumAttributeValuesList(newAOV.Attribute.AttributeId);
+                                                newAOV.AvailibleValuesList = new EnumObjectValue(sessionInfo).GetAvailibleEnumObjectValuesList(newAOV.Attribute.AttributeId);
+                                            }
+                                        }
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                                atrList.Add(newAOV);
+                            }
+                        }
+                    }
+                }
+            }
+
+            ObservableCollection<VMMC_Core.TreeItem> sortTreeItemsList = new ObservableCollection<VMMC_Core.TreeItem>();
+            foreach (VMMC_Core.TreeItem ti in treeItemsList)
+            {
+                VMMC_Core.TreeItem existti = sortTreeItemsList.Where(x => x.TreeItemCode == ti.TreeItemCode && x.Parent.TreeItemId == ti.Parent.TreeItemId).FirstOrDefault();
+                if (existti == null) sortTreeItemsList.Add(ti);
+                else
+                {
+
+                }
+
+            }
+            treeItemsList = sortTreeItemsList;
+            excelParserViewModel.DocumentsCollection = docList;
+            excelParserViewModel.TagsCollection = tagList;
+            excelParserViewModel.RelationshipsCollection = relList;
+            excelParserViewModel.TreeItemsCollection = treeItemsList;
+            excelParserViewModel.AttributeObjectValuesCollection = atrList;
+
+
+            return excelParserViewModel;
+            //DataContext = excelParserViewModel;
+            //Documents_DataGrid.ItemsSource = excelParserViewModel.DocumentsCollection;
+        }
+
 
         private ObservableCollection<VMMC_Core.Relationship> RelNewDocList(VMMC_Core.Document oldDoc, VMMC_Core.Document newDoc, ObservableCollection<VMMC_Core.Relationship> targetRelList)
         {

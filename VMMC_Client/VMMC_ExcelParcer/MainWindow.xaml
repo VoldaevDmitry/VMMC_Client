@@ -26,12 +26,16 @@
                         <MenuItem Header="Выбрать файл набора тегов..." Command="{Binding GetBKFILLTagsFromExcelCommand}"/>
                         <MenuItem Header="Выбрать файл набора значений отношений тегов с тегами..." Command="{Binding GetBKFILLTagTagRelFromExcelCommand}"/>
                         <MenuItem Header="Выбрать файл набора значений атрибутов тегов..." Command="{Binding GetBKFILLTagsAttributesFromExcelCommand}"/>
-                        <MenuItem Header="Выбрать файл набора списочных значений атрибутов тегов..." Command="{Binding GetBKFILLTagsEnumAttributeValuesFromExcelCommand}"/>
+                        <Separator/>
                         <MenuItem Header="Выбрать файл набора елементов дерева документов..." Command="{Binding GetBKFILLDocTreeFromExcelCommand}"/>
                         <MenuItem Header="Выбрать файл набора документов..." Command="{Binding GetBKFILLDocumentsFromExcelCommand}"/>
                         <MenuItem Header="Выбрать файл набора отношений документов..." Command="{Binding GetBKFILLDocumentsRelationshipFromExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл набора значений отношений документов с документами..." Command="{Binding GetBKFILLDocDocFromExcelCommand}"/>
                         <MenuItem Header="Выбрать файл набора файлов документов..." Command="{Binding GetBKFILLDocumentsFilesFromExcelCommand}"/>
-                        <MenuItem Header="Выбрать файл набора атрибутов для тегов..." Command="{Binding GetBKFILLAttributeFromExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл набора значений атрибутов документов..." Command="{Binding GetBKFILLDocumentsAttributesFromExcelCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="Выбрать файл набора атрибутов..." Command="{Binding GetBKFILLAttributeFromExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл набора списочных значений атрибутов..." Command="{Binding GetBKFILLEnumAttributeValuesFromExcelCommand}"/>
                     </MenuItem>
                     <MenuItem Header="Для Юры...">
                         <MenuItem Header="Выбрать файл реестра РД по ВММК..." Command="{Binding GetComplektsWithRevisionsListCommand}"/>

@@ -74,7 +74,7 @@ namespace VMMC_Core
                 return files;
             }
         }
-        public VMMC_Core.Files GetDbFile(string checksum)
+        public VMMC_Core.Files GetDbFileByChecksum(string checksum)
         {
             VMMC_Core.Files dbFile = new VMMC_Core.Files(sessionInfo);
 
@@ -106,8 +106,46 @@ namespace VMMC_Core
 
 
                     }
+                    return dbFile;
                 }
-                return dbFile;
+                else return null;
+            }
+        }
+        public VMMC_Core.Files GetDbFileByRevisionFileName(Guid revisionId, string fileName)
+        {
+            VMMC_Core.Files dbFile = new VMMC_Core.Files(sessionInfo);
+
+            // строка подключения к БД
+            string connectionString = @"Server=" + sessionInfo.ServerName + ";Integrated security=SSPI;database=" + sessionInfo.DataBaseName;
+
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();// устанавливаем соединение с БД
+                string sql = @"SELECT FileId, FileName, FileType, FileSize, HASHSUM, RevisionId FROM [dbo].[Files] WHERE RevisionId='" + revisionId.ToString() + "' AND FileName='" + fileName + "' ";
+                //string sql = @"SELECT FileId, FileName, FileType, FileSize, HASHSUM, RevisionId FROM [dbo].[Files_1] WHERE HASHSUM='" + checksum + "' ";
+
+                // Создать объект Command.
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+
+                        dbFile.FileId = int.Parse(dr["FileId"].ToString());
+                        dbFile.FileName = dr["FileName"].ToString();
+                        dbFile.FileType = dr["FileType"].ToString();
+                        dbFile.RevisionId = Guid.Parse(dr["RevisionId"].ToString());
+                        dbFile.Checksum = dr["HASHSUM"].ToString();
+
+
+                    }
+                    return dbFile;
+                }
+                else return null;
             }
         }
         public ObservableCollection<VMMC_Core.Files> GetDbFiles()
@@ -149,14 +187,16 @@ namespace VMMC_Core
             }
             return files;
         }
-        public string CreateDbFile() //new version using Stored Procedure
+        public string CreateDbFile(bool ignoreChecksum) //new version using Stored Procedure
         {
             string logString = "";
             try
             {
-                VMMC_Core.Files existFile = GetDbFile(Checksum);
-                if (existFile.FileName == null)
+                VMMC_Core.Files existFile = GetDbFileByRevisionFileName(RevisionId, FileName);
+                if (existFile == null && !ignoreChecksum) existFile = GetDbFileByChecksum(Checksum);
+                if (existFile == null)
                 {
+
                     FileLoaderServiceReference.FileLoaderServiceClient client = new FileLoaderServiceReference.FileLoaderServiceClient();
 
                     FileLoaderServiceReference.LoadFileInput inputFile = new FileLoaderServiceReference.LoadFileInput();
@@ -367,8 +407,8 @@ namespace VMMC_Core
             string logString = "";
             try
             {
-                VMMC_Core.Files existFile = GetDbFile(Checksum);
-                if (existFile.FileName == null)
+                VMMC_Core.Files existFile = GetDbFileByChecksum(Checksum);
+                if (existFile == null)
                 {
                     FileInfo fileInfo = new FileInfo(LocalPath);
 

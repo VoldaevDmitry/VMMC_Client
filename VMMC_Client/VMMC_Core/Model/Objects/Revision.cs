@@ -50,7 +50,7 @@ namespace VMMC_Core
                     {
                         revision.RevisionId = Guid.Parse(dr["RevisionId"].ToString());
                         revision.DocumentId = Guid.Parse(dr["DocumentId"].ToString());
-                        revision.Number = (int)dr["Number"];
+                        revision.Number = int.Parse(dr["Number"].ToString());
                         revision.RevisionDate = DateTime.Parse(dr["RevisionDate"].ToString());
                         revision.IsCurrent = (bool)dr["IsCurrent"];
                     }
