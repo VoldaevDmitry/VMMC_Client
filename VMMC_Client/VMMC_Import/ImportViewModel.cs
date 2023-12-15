@@ -528,6 +528,7 @@ namespace VMMC_Import
         public void CheckComplektCollection()
         {
             ObservableCollection<VMMC_Core.Complekt> dbComCollection = new VMMC_Core.Complekt(sessionInfo).GetDbComplektsList();
+            if(dbComCollection == null) dbComCollection = new ObservableCollection<VMMC_Core.Complekt>();
             foreach (VMMC_Core.Complekt com in ComplektsCollection)
             {
                 VMMC_Core.Complekt dbCom = dbComCollection.Where(x => x.ComplektCode == com.ComplektCode).FirstOrDefault();

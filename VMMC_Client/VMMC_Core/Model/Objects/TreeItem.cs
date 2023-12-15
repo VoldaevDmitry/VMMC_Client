@@ -34,7 +34,7 @@ namespace VMMC_Core
             VMMC_Core.TreeItem treeItem = new VMMC_Core.TreeItem(sessionInfo);
 
             string searchStr = "WHERE ([TreeItemCode] = '" + treeItemCode + "' or [TreeItemDescription] = '" + treeItemCode + "') ";
-            if (parentId!=null) searchStr += "AND ([ParentId] = '"+ parentId + "' OR [ClassId] = '" + parentId + "') ";
+            if (parentId != null) searchStr += "AND ([ParentId] = '" + parentId + "' OR [ClassId] = '" + parentId + "') ";
 
             // строка подключения к БД
             string connectionString = @"Server=" + sessionInfo.ServerName + ";Integrated security=SSPI;database=" + sessionInfo.DataBaseName;
@@ -62,6 +62,83 @@ namespace VMMC_Core
                         treeItem.IsExistInDB = true;
                     }
                     return treeItem;
+                }
+                else return null;
+
+            }
+        }
+        public VMMC_Core.TreeItem getTreeItem(Guid treeItemId)
+        {
+            VMMC_Core.TreeItem treeItem = new VMMC_Core.TreeItem(sessionInfo);
+
+            string searchStr = "WHERE [Id] = '" + treeItemId.ToString() + "' ";
+
+            // строка подключения к БД
+            string connectionString = @"Server=" + sessionInfo.ServerName + ";Integrated security=SSPI;database=" + sessionInfo.DataBaseName;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();// устанавливаем соединение с БД
+                string sql = @"SELECT [Id], [TreeItemName], [TreeItemCode], [TreeItemDescription], [ClassId], [ParentId] FROM [dbo].[TreeItems] " + searchStr;
+                // Создать объект Command.
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        treeItem.TreeItemId = Guid.Parse(dr["Id"].ToString());
+                        treeItem.TreeItemName = dr["TreeItemName"].ToString();
+                        treeItem.TreeItemCode = dr["TreeItemCode"].ToString();
+                        treeItem.TreeItemDescription = dr["TreeItemDescription"].ToString();
+                        treeItem.Class = new Class(sessionInfo);
+                        treeItem.Class.ClassId = Guid.Parse(dr["ClassId"].ToString());
+                        if (dr["ParentId"].ToString() != "") treeItem.Parent = new TreeItem(sessionInfo) { TreeItemId = Guid.Parse(dr["ParentId"].ToString()) };
+                        treeItem.IsExistInDB = true;
+                    }
+                    return treeItem;
+                }
+                else return null;
+
+            }
+        }
+        public ObservableCollection<VMMC_Core.TreeItem> getTreeItemCildrens ()
+        {
+            ObservableCollection<VMMC_Core.TreeItem> treeItemList = new ObservableCollection<VMMC_Core.TreeItem>();
+
+            string searchStr = "WHERE [ParentId] = '" + TreeItemId.ToString() + "' ";
+
+            // строка подключения к БД
+            string connectionString = @"Server=" + sessionInfo.ServerName + ";Integrated security=SSPI;database=" + sessionInfo.DataBaseName;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();// устанавливаем соединение с БД
+                string sql = @"SELECT [Id], [TreeItemName], [TreeItemCode], [TreeItemDescription], [ClassId], [ParentId] FROM [dbo].[TreeItems] " + searchStr;
+                // Создать объект Command.
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        VMMC_Core.TreeItem newTreeItem = new VMMC_Core.TreeItem(sessionInfo)
+                        {
+                            TreeItemId = Guid.Parse(dr["Id"].ToString()),
+                            TreeItemName = dr["TreeItemName"].ToString(),
+                            TreeItemCode = dr["TreeItemCode"].ToString(),
+                            TreeItemDescription = dr["TreeItemDescription"].ToString(),
+                            Class = new Class(sessionInfo) { ClassId = Guid.Parse(dr["ClassId"].ToString()) },
+                            Parent = new TreeItem(sessionInfo) { TreeItemId = Guid.Parse(dr["ParentId"].ToString()) },
+                            IsExistInDB = true
+                        };
+                        treeItemList.Add(newTreeItem);
+                    }
+                    return treeItemList;
                 }
                 else return null;
 

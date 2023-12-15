@@ -50,7 +50,6 @@ namespace VMMC_PdfParcer
         {
             sessionInfo = session;
 
-
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

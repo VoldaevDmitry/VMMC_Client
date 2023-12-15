@@ -21,7 +21,14 @@
                     <MenuItem Header="Выбрать файл реестра РД..." Command="{Binding GetDocuments3DDocumentsRdFromExcelCommand}"/>
                     <MenuItem Header="Выбрать файл реестра тегов..." Command="{Binding GetDocuments3DTagFromExcelCommand}"/>
                     <MenuItem Header="Выбрать файл 2222..." Command="{Binding GetDocumentsRdTagsRelationshipsFromExcelCommand}"/>
-                    <MenuItem Header="Выбрать файл реестра РД из MDR..." Command="{Binding GetDocumentsRdFromMDRExcelCommand}"/>                    
+                    <MenuItem Header="Выбрать файл реестра тегов D33..." Command="{Binding GetD33TagsFromExcelCommand}"/>
+                    <MenuItem Header="загрузка из MDR...">
+                        <MenuItem Header="Выбрать файл реестра РД из MDR..." Command="{Binding GetDocumentsRdFromMDRExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл реестра 3D из MDR..." Command="{Binding GetDocuments3dFromMDRExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл реестра Комплектов из MDR..." Command="{Binding GetComplectsFromMDRExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл реестра отношений Комплектов с РД из MDR..." Command="{Binding GetComplectDocumentRelationshipsFromMDRExcelCommand}"/>
+                        <MenuItem Header="Выбрать файл реестра отношений Комплектов с 3D из MDR..." Command="{Binding GetComplectModelRelationshipsFromMDRExcelCommand}"/>
+                    </MenuItem>
                     <MenuItem Header="портирование проекта из AW...">
                         <MenuItem Header="Выбрать файл набора тегов..." Command="{Binding GetBKFILLTagsFromExcelCommand}"/>
                         <MenuItem Header="Выбрать файл набора значений отношений тегов с тегами..." Command="{Binding GetBKFILLTagTagRelFromExcelCommand}"/>

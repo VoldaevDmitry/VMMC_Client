@@ -60,9 +60,11 @@ namespace VMMC_Core
                         };
                         complektList.Add(newComplekt);
                     }
+                    return complektList;
                 }
+                else return null;
 
-                return complektList;
+                
             }
         }
         public VMMC_Core.Complekt GetComplekt(string complektCode)
@@ -90,9 +92,9 @@ namespace VMMC_Core
                         complekt.ComplektName = dr["Name"].ToString();
                         complekt.ComplektClassId = Guid.Parse(dr["ClassId"].ToString());
                     }
+                    return complekt;
                 }
-
-                return complekt;
+                else return null;
             }
         }
         public ObservableCollection<VMMC_Core.Complekt> GetComplektsListFromQuery(string sql)
@@ -149,7 +151,7 @@ namespace VMMC_Core
             try
             {
                 VMMC_Core.Complekt existComplekt = GetComplekt(ComplektCode);
-                if (existComplekt.ComplektCode == null)
+                if (existComplekt == null)
                 {
                     string createDbObjectResult = new VMMC_Core.DbObject(sessionInfo).CreateDbObject(ComplektId, ComplektClassId, systemTypeId, projectId);
 
