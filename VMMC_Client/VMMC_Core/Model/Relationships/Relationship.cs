@@ -22,6 +22,7 @@ namespace VMMC_Core
         public string Status { get; set; }
         public string StatusInfo { get; set; }
         public bool IsExistInDB { get; set; }
+        public bool? LeftIsParent { get; set; }
 
         public Relationship(VMMC_Core.SessionInfo session)
         {
@@ -40,7 +41,7 @@ namespace VMMC_Core
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();// устанавливаем соединение с БД
-                string sql = @"SELECT [Id], [RelTypeId], [LeftObjectId], [RightObjectId], [RoleId] FROM [dbo].[Relationships] WHERE [LeftObjectId] = '" + leftObjectId + "' and [RightObjectId] = '" + rightObjectId + "' ";
+                string sql = @"SELECT [Id], [RelTypeId], [LeftObjectId], [RightObjectId], [RoleId], [LeftIsParent] FROM [dbo].[Relationships] WHERE [LeftObjectId] = '" + leftObjectId + "' and [RightObjectId] = '" + rightObjectId + "' ";
                 // Создать объект Command.
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -55,6 +56,8 @@ namespace VMMC_Core
                         relationship.LeftObjectId = Guid.Parse(dr["LeftObjectId"].ToString());
                         relationship.RightObjectId = Guid.Parse(dr["RightObjectId"].ToString());
                         if(dr["RoleId"].ToString()!="") relationship.RoleId = Guid.Parse(dr["RoleId"].ToString());
+                        if(dr["LeftIsParent"].ToString()=="True") relationship.LeftIsParent = true;
+                        else if (dr["LeftIsParent"].ToString() == "False") relationship.LeftIsParent = false;
                         
                     }
                 }
@@ -72,7 +75,7 @@ namespace VMMC_Core
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();// устанавливаем соединение с БД
-                string sql = @"SELECT [Id], [RelTypeId], [LeftObjectId], [RightObjectId], [RoleId] FROM [dbo].[Relationships] ";
+                string sql = @"SELECT [Id], [RelTypeId], [LeftObjectId], [RightObjectId], [RoleId], [LeftIsParent] FROM [dbo].[Relationships] ";
                 // Создать объект Command.
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -90,6 +93,8 @@ namespace VMMC_Core
                         if (dr["LeftObjectId"].ToString() != "") newRelationship.LeftObjectId = Guid.Parse(dr["LeftObjectId"].ToString());
                         if (dr["RightObjectId"].ToString() != "") newRelationship.RightObjectId = Guid.Parse(dr["RightObjectId"].ToString());
                         if (dr["RoleId"].ToString() != "") newRelationship.RoleId = Guid.Parse(dr["RoleId"].ToString());
+                        if(dr["LeftIsParent"].ToString()=="True") newRelationship.LeftIsParent = true;
+                        else if (dr["LeftIsParent"].ToString() == "False") newRelationship.LeftIsParent = false;
 
 
                         relationshipList.Add(newRelationship);
@@ -109,7 +114,7 @@ namespace VMMC_Core
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();// устанавливаем соединение с БД
-                string sql = "SELECT [Id], [RelTypeId], [LeftObjectId], [RightObjectId], [RoleId] FROM [dbo].[Relationships] WHERE [LeftObjectId] = '"+ relObjectId .ToString()+ "' OR [RightObjectId]= '" + relObjectId.ToString() + "' ";
+                string sql = "SELECT [Id], [RelTypeId], [LeftObjectId], [RightObjectId], [RoleId], [LeftIsParent] FROM [dbo].[Relationships] WHERE [LeftObjectId] = '" + relObjectId .ToString()+ "' OR [RightObjectId]= '" + relObjectId.ToString() + "' ";
                 // Создать объект Command.
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -127,6 +132,8 @@ namespace VMMC_Core
                         if (dr["LeftObjectId"].ToString() != "") newRelationship.LeftObjectId = Guid.Parse(dr["LeftObjectId"].ToString());
                         if (dr["RightObjectId"].ToString() != "") newRelationship.RightObjectId = Guid.Parse(dr["RightObjectId"].ToString());
                         if (dr["RoleId"].ToString() != "") newRelationship.RoleId = Guid.Parse(dr["RoleId"].ToString());
+                        if(dr["LeftIsParent"].ToString()=="True") newRelationship.LeftIsParent = true;
+                        else if(dr["LeftIsParent"].ToString() == "False") newRelationship.LeftIsParent = false;
 
 
                         relationshipList.Add(newRelationship);
@@ -201,6 +208,9 @@ namespace VMMC_Core
                                 newRelationship.RightObject = new VMMC_Core.DbObject(sessionInfo).GetObject(newRelationship.RightObjectId);
                             }
                             if (dr["RoleId"].ToString() != "") newRelationship.RoleId = Guid.Parse(dr["RoleId"].ToString());
+                            if(dr["LeftIsParent"].ToString()=="True") newRelationship.LeftIsParent = true;
+                            else if (dr["LeftIsParent"].ToString()=="False") newRelationship.LeftIsParent = false;
+
                             relationshipList.Add(newRelationship);
                         }
                     }
@@ -238,9 +248,17 @@ namespace VMMC_Core
                     {
                         connection.Open();
 
-                        string sql = "SELECT [Id], [RelTypeId], [LeftObjectId], [RightObjectId], [RoleId] FROM [" + sessionInfo.DataBaseName + "].[dbo].[Relationships] ";
-                        string insertsql = "INSERT INTO [" + sessionInfo.DataBaseName + "].[dbo].[Relationships] ([Id], [RelTypeId], [LeftObjectId], [RightObjectId], [RoleId]) VALUES ( @RelationshipId, @RelTypeId, @LeftObjectId, @RightObjectId, @RoleId )";
-                        if (RoleId == Guid.Parse("00000000-0000-0000-0000-000000000000")) insertsql = "INSERT INTO [" + sessionInfo.DataBaseName + "].[dbo].[Relationships] ([Id], [RelTypeId], [LeftObjectId], [RightObjectId]) VALUES ( @RelationshipId, @RelTypeId, @LeftObjectId, @RightObjectId )";
+                        string sql = "SELECT [Id], [RelTypeId], [LeftObjectId], [RightObjectId], [RoleId], [LeftIsParent] FROM [" + sessionInfo.DataBaseName + "].[dbo].[Relationships] ";
+                        string insertsql = "INSERT INTO [" + sessionInfo.DataBaseName + "].[dbo].[Relationships] ([Id], [RelTypeId], [LeftObjectId], [RightObjectId]";
+                        if (RoleId == Guid.Parse("00000000-0000-0000-0000-000000000000")) insertsql += ", [RoleId]";
+                        if (LeftIsParent!=null) insertsql += ", [LeftIsParent]";
+                        insertsql += ") ";
+                        string valuessql = "VALUES ( @RelationshipId, @RelTypeId, @LeftObjectId, @RightObjectId, @RoleId, @LeftIsParent )";
+                        if (RoleId == Guid.Parse("00000000-0000-0000-0000-000000000000")) insertsql += ", @RoleId";
+                        if (LeftIsParent != null) insertsql += ", @LeftIsParent";
+                        insertsql += ") ";
+
+                        //if (RoleId == Guid.Parse("00000000-0000-0000-0000-000000000000")) insertsql = "INSERT INTO [" + sessionInfo.DataBaseName + "].[dbo].[Relationships] ([Id], [RelTypeId], [LeftObjectId], [RightObjectId]) VALUES ( @RelationshipId, @RelTypeId, @LeftObjectId, @RightObjectId )";
                         SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);
                         SqlCommandBuilder commandBuilder = new SqlCommandBuilder(adapter);
 
@@ -253,7 +271,9 @@ namespace VMMC_Core
                         commandToIsert.Parameters.Add(new SqlParameter("@LeftObjectId", SqlDbType.UniqueIdentifier)).Value = LeftObjectId;
                         commandToIsert.Parameters.Add(new SqlParameter("@RightObjectId", SqlDbType.UniqueIdentifier)).Value = RightObjectId;
                         if (RoleId != Guid.Parse("00000000-0000-0000-0000-000000000000")) commandToIsert.Parameters.Add(new SqlParameter("@RoleId", SqlDbType.UniqueIdentifier)).Value = RoleId;
-                        
+                        if (LeftIsParent!=null) commandToIsert.Parameters.Add(new SqlParameter("@LeftIsParent", SqlDbType.Bit)).Value = LeftIsParent;
+
+
 
                         adapter.InsertCommand = commandToIsert;
                         commandToIsert.ExecuteNonQuery();

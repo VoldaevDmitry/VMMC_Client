@@ -4971,70 +4971,58 @@ namespace VMMC_ExcelParcer
                     if (newTag != null)
                     {
                         tagList.Add(newTag);
-
-                        VMMC_Core.TreeItem tagtreeTreeItem = new TreeItem(sessionInfo).getTreeItem("ELEMTREE", null);
-
-                        //VMMC_Core.TreeItem projectTreeItem = new TreeItem(sessionInfo).getTreeItem("4550.70", tagtreeTreeItem.TreeItemId.ToString());
-                        //if (projectTreeItem.TreeItemCode == null)
-                        //{
-                        //    projectTreeItem.TreeItemId = Guid.NewGuid();
-                        //    projectTreeItem.TreeItemCode = complexCodeStr;
-                        //    projectTreeItem.Class = new VMMC_Core.Class(sessionInfo).getClass("TREEITEM");
-                        //    projectTreeItem.Parent = tagtreeTreeItem;
-                        //    treeItemsList.Add(projectTreeItem);
-                        //}
-
-                        VMMC_Core.TreeItem buildingTreeItem = new TreeItem(sessionInfo).getTreeItem("10", tagtreeTreeItem.TreeItemId.ToString());
-                        if (buildingTreeItem.TreeItemCode == null)
-                        {
-                            buildingTreeItem.TreeItemId = Guid.NewGuid();
-                            buildingTreeItem.TreeItemCode = "10";
-                            buildingTreeItem.Class = new VMMC_Core.Class(sessionInfo).getClass("BUILD");
-                            buildingTreeItem.Parent = tagtreeTreeItem;
-                            treeItemsList.Add(buildingTreeItem);
-                        }
-
-                        //string complexStr = systemCodeStr.Substring(8, 3);
-                        //VMMC_Core.TreeItem complexTreeItem = new TreeItem(sessionInfo).getTreeItem(systemCodeStr.Substring(8, 3), buildingTreeItem.TreeItemId.ToString());
-                        //if (complexTreeItem == null)
-                        //{
-                        //    complexTreeItem = new TreeItem(sessionInfo);
-
-                        //    complexTreeItem.TreeItemId = Guid.NewGuid();
-                        //    complexTreeItem.TreeItemCode = systemCodeStr.Substring(8, 3);
-                        //    complexTreeItem.TreeItemName = systemCodeStr.Substring(8, 3);
-                        //    complexTreeItem.Class = new VMMC_Core.Class(sessionInfo).getClass("COMPLEX");
-                        //    complexTreeItem.Parent = buildingTreeItem;
-                        //    treeItemsList.Add(complexTreeItem);
-                        //}
-
-                        //string systemStr = systemCodeStr.Substring(12, 4);
-                        //VMMC_Core.TreeItem systemTreeItem = new TreeItem(sessionInfo).getTreeItem(systemCodeStr.Substring(12, 4), complexTreeItem.TreeItemId.ToString());
-
-                        //if (systemTreeItem == null)
-                        //{
-                        //    systemTreeItem = new TreeItem(sessionInfo);
-
-                        //    systemTreeItem.TreeItemId = Guid.NewGuid();
-                        //    systemTreeItem.TreeItemCode = systemCodeStr.Substring(12, 4);
-                        //    systemTreeItem.TreeItemName = systemNameStr;
-                        //    systemTreeItem.Class = new VMMC_Core.Class(sessionInfo).getClass("SYSTEM");
-                        //    systemTreeItem.Parent = complexTreeItem;
-                        //    treeItemsList.Add(systemTreeItem);
-                        //}
-
+                                                
                         if (systemIdStr != "")
                         {
                             VMMC_Core.TreeItem systemTreeItem = new TreeItem(sessionInfo).getTreeItem(Guid.Parse(systemIdStr));
-                            VMMC_Core.Relationship tagSystem = new Relationship(sessionInfo)
+                            if (systemTreeItem != null)
                             {
-                                RelationshipId = Guid.NewGuid(),
-                                LeftObject = new DbObject(sessionInfo) { ObjectId = systemTreeItem.TreeItemId },
-                                RightObject = new DbObject(sessionInfo) { ObjectId = newTag.TagId },
-                                RelTypeId = new Relationship(sessionInfo).GetRelationshipTypeId("Система-Тэг")
-                            };
-                            relList.Add(tagSystem);
+                                VMMC_Core.Relationship tagSystem = new Relationship(sessionInfo)
+                                {
+                                    RelationshipId = Guid.NewGuid(),
+                                    LeftObject = new DbObject(sessionInfo) { ObjectId = systemTreeItem.TreeItemId },
+                                    RightObject = new DbObject(sessionInfo) { ObjectId = newTag.TagId },
+                                    RelTypeId = new Relationship(sessionInfo).GetRelationshipTypeId("Система-Тэг")
+                                };
+                                relList.Add(tagSystem);
+                            }
                         }
+
+                        if (relTagCodeStr != "") 
+                        {
+                            VMMC_Core.Tag relatedTag = new Tag(sessionInfo).GetTag(relTagCodeStr);
+                            if (relatedTag != null)
+                            {
+                                VMMC_Core.Relationship tagTag = new Relationship(sessionInfo)
+                                {
+                                    RelationshipId = Guid.NewGuid(),
+                                    LeftObject = new DbObject(sessionInfo) { ObjectId = relatedTag.TagId },
+                                    RightObject = new DbObject(sessionInfo) { ObjectId = newTag.TagId },
+                                    RelTypeId = new Relationship(sessionInfo).GetRelationshipTypeId("Тег-Тег"),
+                                    LeftIsParent = true
+
+                                };
+                                relList.Add(tagTag);
+                            }
+
+                        }
+
+                        if(relDocCodeStr != "")
+                        {
+                            VMMC_Core.Document relatedDoc = new Document(sessionInfo).GetDocument(relDocCodeStr);
+                            if (relatedDoc != null)
+                            {
+                                VMMC_Core.Relationship tagDoc = new Relationship(sessionInfo)
+                                {
+                                    RelationshipId = Guid.NewGuid(),
+                                    LeftObject = new DbObject(sessionInfo) { ObjectId = relatedDoc.DocumentId },
+                                    RightObject = new DbObject(sessionInfo) { ObjectId = newTag.TagId },
+                                    RelTypeId = new Relationship(sessionInfo).GetRelationshipTypeId("Тег-3D_модель")
+                                };
+                                //relList.Add(tagDoc);
+                            }
+                        }
+
                     }
                 }
             }
