@@ -250,14 +250,14 @@ namespace VMMC_Core
 
                         string sql = "SELECT [Id], [RelTypeId], [LeftObjectId], [RightObjectId], [RoleId], [LeftIsParent] FROM [" + sessionInfo.DataBaseName + "].[dbo].[Relationships] ";
                         string insertsql = "INSERT INTO [" + sessionInfo.DataBaseName + "].[dbo].[Relationships] ([Id], [RelTypeId], [LeftObjectId], [RightObjectId]";
-                        if (RoleId == Guid.Parse("00000000-0000-0000-0000-000000000000")) insertsql += ", [RoleId]";
+                        if (RoleId != Guid.Parse("00000000-0000-0000-0000-000000000000")) insertsql += ", [RoleId]";
                         if (LeftIsParent!=null) insertsql += ", [LeftIsParent]";
                         insertsql += ") ";
-                        string valuessql = "VALUES ( @RelationshipId, @RelTypeId, @LeftObjectId, @RightObjectId, @RoleId, @LeftIsParent )";
-                        if (RoleId == Guid.Parse("00000000-0000-0000-0000-000000000000")) insertsql += ", @RoleId";
-                        if (LeftIsParent != null) insertsql += ", @LeftIsParent";
-                        insertsql += ") ";
-
+                        string valuessql = "VALUES ( @RelationshipId, @RelTypeId, @LeftObjectId, @RightObjectId";
+                        if (RoleId != Guid.Parse("00000000-0000-0000-0000-000000000000")) valuessql += ", @RoleId";
+                        if (LeftIsParent != null) valuessql += ", @LeftIsParent";
+                        valuessql += ") ";
+                        insertsql = insertsql + valuessql;
                         //if (RoleId == Guid.Parse("00000000-0000-0000-0000-000000000000")) insertsql = "INSERT INTO [" + sessionInfo.DataBaseName + "].[dbo].[Relationships] ([Id], [RelTypeId], [LeftObjectId], [RightObjectId]) VALUES ( @RelationshipId, @RelTypeId, @LeftObjectId, @RightObjectId )";
                         SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);
                         SqlCommandBuilder commandBuilder = new SqlCommandBuilder(adapter);

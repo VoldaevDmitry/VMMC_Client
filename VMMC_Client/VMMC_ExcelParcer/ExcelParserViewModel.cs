@@ -4958,14 +4958,24 @@ namespace VMMC_ExcelParcer
                     VMMC_Core.Tag newTag = new VMMC_Core.Tag(sessionInfo).GetTag(tagCodeStr);
                     if (newTag == null && tagClassCodeStr!="")
                     {
-                        newTag = new VMMC_Core.Tag(sessionInfo)
+                        VMMC_Core.Class tagClass = new Class(sessionInfo).getClass(tagClassCodeStr);
+                        if (tagClass != null)
                         {
-                            TagId = Guid.NewGuid(),
-                            Position = tagCodeStr,
-                            TagName = tagNameStr,
-                            TagClassId = new VMMC_Core.Class(sessionInfo).getClass(tagClassCodeStr).ClassId
+                            newTag = new VMMC_Core.Tag(sessionInfo)
+                            {
+                                TagId = Guid.NewGuid(),
+                                Position = tagCodeStr,
+                                TagName = tagNameStr,
+                                TagClassId = new VMMC_Core.Class(sessionInfo).getClass(tagClassCodeStr).ClassId
 
-                        };
+                            };
+                        }
+                        else if (tagClassCodeStr == "Шкаф ЛСУ") { }
+                        else if (tagClassCodeStr == "Устройства спутниковые, антены") { }
+                        else if (tagClassCodeStr == "Устройства спутниковые, антны") { }
+                        else
+                        {
+                        }
                     }
 
                     if (newTag != null)
