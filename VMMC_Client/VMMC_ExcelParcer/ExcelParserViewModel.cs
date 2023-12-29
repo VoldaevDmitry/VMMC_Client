@@ -4973,6 +4973,11 @@ namespace VMMC_ExcelParcer
                         else if (tagClassCodeStr == "Шкаф ЛСУ") { }
                         else if (tagClassCodeStr == "Устройства спутниковые, антены") { }
                         else if (tagClassCodeStr == "Устройства спутниковые, антны") { }
+
+                        else if (tagClassCodeStr == "Запорно-регулирующая арматура") { }
+                        else if (tagClassCodeStr == "Запорная арматура") { }
+                        else if (tagClassCodeStr == "Регулирующая арматура") { }
+                        else if (tagClassCodeStr == "Распределительные щиты") { }
                         else
                         {
                         }
@@ -4981,8 +4986,23 @@ namespace VMMC_ExcelParcer
                     if (newTag != null)
                     {
                         tagList.Add(newTag);
-                                                
-                        if (systemIdStr != "")
+
+                        if (treeItemIdStr != "")
+                        {
+                            VMMC_Core.TreeItem systemTreeItem = new TreeItem(sessionInfo).getTreeItem(Guid.Parse(treeItemIdStr));
+                            if (systemTreeItem != null)
+                            {
+                                VMMC_Core.Relationship tagSystem = new Relationship(sessionInfo)
+                                {
+                                    RelationshipId = Guid.NewGuid(),
+                                    LeftObject = new DbObject(sessionInfo) { ObjectId = systemTreeItem.TreeItemId },
+                                    RightObject = new DbObject(sessionInfo) { ObjectId = newTag.TagId },
+                                    RelTypeId = new Relationship(sessionInfo).GetRelationshipTypeId("Элемент дерева-Тэг")
+                                };
+                                relList.Add(tagSystem);
+                            }
+                        }
+                        else if (systemIdStr != "")
                         {
                             VMMC_Core.TreeItem systemTreeItem = new TreeItem(sessionInfo).getTreeItem(Guid.Parse(systemIdStr));
                             if (systemTreeItem != null)
