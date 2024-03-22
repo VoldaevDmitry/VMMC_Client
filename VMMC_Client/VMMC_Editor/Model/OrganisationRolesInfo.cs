@@ -21,12 +21,19 @@ namespace VMMC_Editor
         public bool isSupplier;
         public bool isControl;
         public bool isSMR;
+        public bool isWDDeveloper;
+        public bool isDesigner;
+        public bool isDeliveryResponsible;
 
         public bool isOrganization_DB;
         public bool isManufacturer_DB;
         public bool isSupplier_DB;
         public bool isControl_DB;
         public bool isSMR_DB;
+        public bool isWDDeveloper_DB;
+        public bool isDesigner_DB;
+        public bool isDeliveryResponsible_DB;
+
 
         public bool isSaved;
 
@@ -111,6 +118,33 @@ namespace VMMC_Editor
                 OnOrganisationRolesInfoPropertyChanged("IsSMR");
             }
         }
+        public bool IsWDDeveloper
+        {
+            get { return isWDDeveloper; }
+            set
+            {
+                isWDDeveloper = value;
+                OnOrganisationRolesInfoPropertyChanged("IsWDDeveloper");
+            }
+        }
+        public bool IsDesigner
+        {
+            get { return isDesigner; }
+            set
+            {
+                isDesigner = value;
+                OnOrganisationRolesInfoPropertyChanged("IsDesigner");
+            }
+        }
+        public bool IsDeliveryResponsible
+        {
+            get { return isDeliveryResponsible; }
+            set
+            {
+                isDeliveryResponsible = value;
+                OnOrganisationRolesInfoPropertyChanged("IsDeliveryResponsible");
+            }
+        }
         public bool IsOrganization_DB
         {
             get { return isOrganization_DB; }
@@ -154,6 +188,33 @@ namespace VMMC_Editor
             {
                 isSMR_DB = value;
                 OnOrganisationRolesInfoPropertyChanged("IsSMR_DB");
+            }
+        }
+        public bool IsWDDeveloper_DB
+        {
+            get { return isWDDeveloper_DB; }
+            set
+            {
+                isWDDeveloper_DB = value;
+                OnOrganisationRolesInfoPropertyChanged("IsWDDeveloper_DB");
+            }
+        }
+        public bool IsDesigner_DB
+        {
+            get { return isDesigner_DB; }
+            set
+            {
+                isDesigner_DB = value;
+                OnOrganisationRolesInfoPropertyChanged("IsDesigner_DB");
+            }
+        }
+        public bool IsDeliveryResponsible_DB
+        {
+            get { return isDeliveryResponsible_DB; }
+            set
+            {
+                isDeliveryResponsible_DB = value;
+                OnOrganisationRolesInfoPropertyChanged("IsDeliveryResponsible_DB");
             }
         }
 

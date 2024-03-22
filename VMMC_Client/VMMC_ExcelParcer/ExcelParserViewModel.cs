@@ -162,6 +162,25 @@ namespace VMMC_ExcelParcer
             }
         }
 
+        private VMMC_Core.RelayCommand getLotsAsComplektsCommand;
+        public VMMC_Core.RelayCommand GetLotsAsComplektsCommand
+        {
+            get
+            {
+                return getLotsAsComplektsCommand ??
+                  (getLotsAsComplektsCommand = new RelayCommand(obj => { GetLotsAsComplekts(); }));
+            }
+        }
+
+        private VMMC_Core.RelayCommand getDocumentsPDCommand;
+        public VMMC_Core.RelayCommand GetDocumentsPDCommand
+        {
+            get
+            {
+                return getDocumentsPDCommand ??
+                  (getDocumentsPDCommand = new RelayCommand(obj => { GetDocumentsPD(); }));
+            }
+        }
 
         private VMMC_Core.RelayCommand getDocumentsRdTagsRelationshipsFromExcelCommand;
         public VMMC_Core.RelayCommand GetDocumentsRdTagsRelationshipsFromExcelCommand
@@ -1294,6 +1313,425 @@ namespace VMMC_ExcelParcer
         }
 
 
+        private void GetLotsAsComplekts()
+        {
+
+            
+
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                dialog.Multiselect = true;
+
+                DocumentsCollection = null;
+                ComplektsCollection = null;
+                TagsCollection = null;
+                TreeItemsCollection = null;
+                RelationshipsCollection = null;
+
+                dialog.ShowDialog();
+
+
+                if (dialog.FileNames != null)
+                {
+                    foreach (string fileName in dialog.FileNames)
+                    {
+                        AttributeObjectValueViewModelCollection = new ObservableCollection<VMMC_Core.CommonControls.AttributeObjectValueViewModel>();
+
+                        ExcelParserViewModel newExcelParserViewModel = GetLotsAsComplekts(fileName);
+
+                        if (DocumentsCollection == null) DocumentsCollection = newExcelParserViewModel.DocumentsCollection;
+                        else foreach (VMMC_Core.Document document in newExcelParserViewModel.DocumentsCollection) DocumentsCollection.Add(document);
+
+                        if (ComplektsCollection == null) ComplektsCollection = newExcelParserViewModel.ComplektsCollection;
+                        else foreach (VMMC_Core.Complekt complekt in newExcelParserViewModel.ComplektsCollection) ComplektsCollection.Add(complekt);
+
+                        if (RelationshipsCollection == null) RelationshipsCollection = newExcelParserViewModel.RelationshipsCollection;
+                        else foreach (VMMC_Core.Relationship relationship in newExcelParserViewModel.RelationshipsCollection) RelationshipsCollection.Add(relationship);
+
+                        if (AttributeObjectValuesCollection == null) AttributeObjectValuesCollection = newExcelParserViewModel.AttributeObjectValuesCollection;
+                        else foreach (VMMC_Core.AttributeObjectValue attributeObjectValue in newExcelParserViewModel.AttributeObjectValuesCollection) AttributeObjectValuesCollection.Add(attributeObjectValue);
+                        if (AttributeObjectValuesCollection != null)
+                        {
+                            foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
+                            {
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
+                            }
+                        }
+                        if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
+                        else foreach (VMMC_Core.TreeItem treeItem in newExcelParserViewModel.TreeItemsCollection) TreeItemsCollection.Add(treeItem);
+
+                    }
+                }
+            }
+        }
+        public ExcelParserViewModel GetLotsAsComplekts(string FileName)
+        {
+            ExcelParserViewModel excelParserViewModel = new ExcelParserViewModel(sessionInfo);
+
+            ObservableCollection<DataTable> resultDtList = new VMMC_ExcelParcer.ImportFromExcel().ExcelToDataTable(FileName, true);
+            ObservableCollection<VMMC_Core.Complekt> complectsList = new ObservableCollection<VMMC_Core.Complekt>();
+            ObservableCollection<VMMC_Core.Relationship> relList = new ObservableCollection<VMMC_Core.Relationship>();
+            ObservableCollection<VMMC_Core.TreeItem> treeItemsList = new ObservableCollection<VMMC_Core.TreeItem>();
+            ObservableCollection<VMMC_Core.AttributeObjectValue> atrList = new ObservableCollection<VMMC_Core.AttributeObjectValue>();
+
+            foreach (DataTable resultDT in resultDtList)
+            {
+                for (int i = 0; i < resultDT.Rows.Count; i++)
+                {
+                    string lotCodeStr = ""; //ComplectRDCode_выч (Code)+
+                    string lotNameStr = ""; //ComplectRDCode_выч (Code)+
+                    string atrStatusStr = ""; //ModelNo_выч (Code)+ 
+                    string relOrgStr = ""; //ModelNo_выч (Code)+ 
+
+
+                    for (int j = 0; j < resultDT.Columns.Count; j++)
+                    {
+                        string columnName = resultDT.Columns[j].ColumnName.Replace("\n", "");
+
+                        switch (columnName)
+                        {
+                            case "№ ЛОТА":
+                                lotCodeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "Наименование лота":
+                                lotNameStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "Статус договора":
+                                atrStatusStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "Организация (ответственная за договор)":
+                                relOrgStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+
+
+                    VMMC_Core.Complekt newLot = new VMMC_Core.Complekt(sessionInfo).GetComplekt(lotCodeStr);
+                    if (newLot == null) 
+                    {
+                        newLot = new VMMC_Core.Complekt(sessionInfo); 
+                        newLot.ComplektId = Guid.NewGuid();
+                        newLot.ComplektCode = lotCodeStr;
+                        newLot.ComplektName = lotNameStr;
+                        newLot.ComplektClassId = new VMMC_Core.Class(sessionInfo).getClass("Лот").ClassId;
+                    }
+                    
+                    if (newLot != null)
+                    {
+                        complectsList.Add(newLot);
+                                                
+                        VMMC_Core.AttributeObjectValue atrStatus = new AttributeObjectValue(sessionInfo)
+                        {
+                            AttributeObjectValueId = Guid.NewGuid(),
+                            Attribute = new VMMC_Core.Attribute(sessionInfo).SearchAttribute("Статус договора"),
+                            Object = new DbObject(sessionInfo) { ObjectId = newLot.ComplektId },
+                        };
+                        VMMC_Core.EnumObjectValue documentTypeEnumObjectValue = new EnumObjectValue(sessionInfo)
+                        {
+                            EnumObjectValueId = Guid.NewGuid(),
+                            AttributeObjectValue = atrStatus,
+                            EnumAttributeValue = new EnumAttributeValue(sessionInfo).GetEnumAttributeValue(atrStatus.Attribute.AttributeId, atrStatusStr)
+                        };
+                        if (documentTypeEnumObjectValue.EnumAttributeValue != null)
+                        {
+                            atrStatus.EnumObjectValue = documentTypeEnumObjectValue;
+                            atrStatus.AvailibleEnumAttributeValueList = new EnumAttributeValue(sessionInfo).GetAvailableEnumAttributeValuesList(atrStatus.Attribute.AttributeId);
+                            atrStatus.AvailibleValuesList = new EnumObjectValue(sessionInfo).GetAvailibleEnumObjectValuesList(atrStatus.Attribute.AttributeId);
+                            atrList.Add(atrStatus);
+                        }
+
+
+
+
+
+                        VMMC_Core.Organization relOrg = new Organization(sessionInfo).getOrganization(relOrgStr);
+                        if (relOrg != null)
+                        {
+                            VMMC_Core.Relationship newRelOrgLot = new Relationship(sessionInfo)
+                            {
+                                RelationshipId = Guid.NewGuid(),
+                                LeftObject = new DbObject(sessionInfo) { ObjectId = relOrg.OrganizationId },
+                                RightObject = new DbObject(sessionInfo) { ObjectId = newLot.ComplektId },
+                                RelTypeId = new Relationship(sessionInfo).GetRelationshipTypeId("Организация-Лот"),
+                                RoleId = Guid.Parse(new Role(sessionInfo).getRoles().Where(x => x.RoleName == "Ответственный по поставке").First().RoleId)
+                            };
+                            relList.Add(newRelOrgLot);
+                        }
+
+                        VMMC_Core.TreeItem doctreeTreeItem = new TreeItem(sessionInfo).getTreeItem("ELEMDOC", null);
+
+                        VMMC_Core.TreeItem tsTreeItem = new TreeItem(sessionInfo).getTreeItem("ТС", doctreeTreeItem.TreeItemId.ToString());
+                        if (tsTreeItem == null) tsTreeItem = treeItemsList.Where(x=> x.TreeItemCode == "ТС").FirstOrDefault();
+                        if (tsTreeItem == null)
+                        {
+                            tsTreeItem = new TreeItem(sessionInfo);
+                            tsTreeItem.TreeItemId = Guid.NewGuid();
+                            tsTreeItem.TreeItemCode = "ТС";
+                            tsTreeItem.TreeItemName = "Технические спецификации";
+                            tsTreeItem.Class = new VMMC_Core.Class(sessionInfo).getClass("TREEITEM");
+                            tsTreeItem.Parent = doctreeTreeItem;
+
+                            treeItemsList.Add(tsTreeItem);
+                        }
+
+                        if (tsTreeItem != null)
+                        {
+                            VMMC_Core.Relationship newRelTILot = new Relationship(sessionInfo)
+                            {
+                                RelationshipId = Guid.NewGuid(),
+                                LeftObject = new DbObject(sessionInfo) { ObjectId = tsTreeItem.TreeItemId },
+                                RightObject = new DbObject(sessionInfo) { ObjectId = newLot.ComplektId },
+                                RelTypeId = new Relationship(sessionInfo).GetRelationshipTypeId("Элемент дерева-Комплект")
+                            };
+                            relList.Add(newRelTILot);
+                        }
+                        
+
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+
+            excelParserViewModel.ComplektsCollection = complectsList;
+            excelParserViewModel.RelationshipsCollection = relList;
+            excelParserViewModel.TreeItemsCollection = treeItemsList;
+            excelParserViewModel.AttributeObjectValuesCollection = atrList;
+
+
+            return excelParserViewModel;
+            //DataContext = excelParserViewModel;
+            //Documents_DataGrid.ItemsSource = excelParserViewModel.DocumentsCollection;
+        }
+
+        private void GetDocumentsPD()
+        {
+
+
+
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                dialog.Multiselect = true;
+
+                DocumentsCollection = null;
+                ComplektsCollection = null;
+                TagsCollection = null;
+                TreeItemsCollection = null;
+                RelationshipsCollection = null;
+
+                dialog.ShowDialog();
+
+
+                if (dialog.FileNames != null)
+                {
+                    foreach (string fileName in dialog.FileNames)
+                    {
+                        AttributeObjectValueViewModelCollection = new ObservableCollection<VMMC_Core.CommonControls.AttributeObjectValueViewModel>();
+
+                        ExcelParserViewModel newExcelParserViewModel = GetDocumentsPD(fileName);
+
+                        if (DocumentsCollection == null) DocumentsCollection = newExcelParserViewModel.DocumentsCollection;
+                        else foreach (VMMC_Core.Document document in newExcelParserViewModel.DocumentsCollection) DocumentsCollection.Add(document);
+
+                        if (ComplektsCollection == null) ComplektsCollection = newExcelParserViewModel.ComplektsCollection;
+                        else foreach (VMMC_Core.Complekt complekt in newExcelParserViewModel.ComplektsCollection) ComplektsCollection.Add(complekt);
+
+                        if (RelationshipsCollection == null) RelationshipsCollection = newExcelParserViewModel.RelationshipsCollection;
+                        else foreach (VMMC_Core.Relationship relationship in newExcelParserViewModel.RelationshipsCollection) RelationshipsCollection.Add(relationship);
+
+                        if (AttributeObjectValuesCollection == null) AttributeObjectValuesCollection = newExcelParserViewModel.AttributeObjectValuesCollection;
+                        else foreach (VMMC_Core.AttributeObjectValue attributeObjectValue in newExcelParserViewModel.AttributeObjectValuesCollection) AttributeObjectValuesCollection.Add(attributeObjectValue);
+                        if (AttributeObjectValuesCollection != null)
+                        {
+                            foreach (VMMC_Core.AttributeObjectValue aov in AttributeObjectValuesCollection)
+                            {
+                                //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
+                            }
+                        }
+                        if (TreeItemsCollection == null) TreeItemsCollection = newExcelParserViewModel.TreeItemsCollection;
+                        else foreach (VMMC_Core.TreeItem treeItem in newExcelParserViewModel.TreeItemsCollection) TreeItemsCollection.Add(treeItem);
+
+                    }
+                }
+            }
+        }
+        public ExcelParserViewModel GetDocumentsPD(string FileName)
+        {
+            ExcelParserViewModel excelParserViewModel = new ExcelParserViewModel(sessionInfo);
+
+            ObservableCollection<DataTable> resultDtList = new VMMC_ExcelParcer.ImportFromExcel().ExcelToDataTable(FileName, true);
+            ObservableCollection<VMMC_Core.Document> docList = new ObservableCollection<VMMC_Core.Document>();
+            ObservableCollection<VMMC_Core.Relationship> relList = new ObservableCollection<VMMC_Core.Relationship>();
+            ObservableCollection<VMMC_Core.TreeItem> treeItemsList = new ObservableCollection<VMMC_Core.TreeItem>();
+            ObservableCollection<VMMC_Core.AttributeObjectValue> atrList = new ObservableCollection<VMMC_Core.AttributeObjectValue>();
+
+            foreach (DataTable resultDT in resultDtList)
+            {
+                for (int i = 0; i < resultDT.Rows.Count; i++)
+                {
+                    string pdCodeStr = ""; //ComplectRDCode_выч (Code)+
+                    string pdNameStr = ""; //ComplectRDCode_выч (Code)+
+                    string sectionCodeStr = ""; //ModelNo_выч (Code)+ 
+                    string sectionNameStr = ""; //ModelNo_выч (Code)+ 
+                    string subsectionCodeStr = ""; //ModelNo_выч (Code)+ 
+                    string subsectionNameStr = ""; //ModelNo_выч (Code)+ 
+                    string сhangeStr = ""; //ModelNo_выч (Code)+ 
+
+
+                    for (int j = 0; j < resultDT.Columns.Count; j++)
+                    {
+                        string columnName = resultDT.Columns[j].ColumnName.Replace("\n", "");
+
+                        switch (columnName)
+                        {
+                            case "Шифр":
+                                pdCodeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "Наименование":
+                                pdNameStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "Код раздела":
+                                sectionCodeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "Код Раздела":
+                                sectionCodeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "Наименование раздела":
+                                sectionNameStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "Код подраздела":
+                                subsectionCodeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "Наименование подраздела":
+                                subsectionNameStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            case "Изменение":
+                                сhangeStr = resultDT.Rows[i][j].ToString().Replace("\r", "\n").Trim();
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+
+
+                    VMMC_Core.Document newDoc = new VMMC_Core.Document(sessionInfo).GetDocument(pdCodeStr);
+                    if (newDoc == null && pdCodeStr!="")
+                    {
+                        newDoc = new VMMC_Core.Document(sessionInfo)
+                        {
+                            DocumentId = Guid.NewGuid(),
+                            DocumentCode = pdCodeStr,
+                            DocumentName = pdNameStr,
+                            DocumentClassId = new VMMC_Core.Class(sessionInfo).getClass("Проектная документация").ClassId
+                        };
+                    }
+                    if (newDoc != null)
+                    {
+                        docList.Add(newDoc);
+                    
+                        VMMC_Core.AttributeObjectValue сhange = new AttributeObjectValue(sessionInfo)
+                        {
+                            AttributeObjectValueId = Guid.NewGuid(),
+                            Attribute = new VMMC_Core.Attribute(sessionInfo).SearchAttribute("Изменение"),
+                            Object = new DbObject(sessionInfo) { ObjectId = newDoc.DocumentId },
+                            StringValue = сhangeStr
+                        };
+
+                        atrList.Add(сhange);
+                    }
+
+                    VMMC_Core.TreeItem doctreeTreeItem = new TreeItem(sessionInfo).getTreeItem("ELEMDOC", null);
+
+                    VMMC_Core.TreeItem pdTreeItem = new TreeItem(sessionInfo).getTreeItem("ПД", doctreeTreeItem.TreeItemId.ToString());
+                    if (pdTreeItem.TreeItemCode == null)
+                    {
+                        pdTreeItem.TreeItemId = Guid.NewGuid();
+                        pdTreeItem.TreeItemCode = "ПД";
+                        pdTreeItem.Class = new VMMC_Core.Class(sessionInfo).getClass("TREEITEM");
+                        pdTreeItem.Parent = pdTreeItem;
+                        treeItemsList.Add(pdTreeItem);
+                    }
+
+
+                    VMMC_Core.TreeItem sectionTreeItem = new TreeItem(sessionInfo).getTreeItem(sectionCodeStr, pdTreeItem.TreeItemId.ToString());
+                    if (sectionTreeItem == null && sectionCodeStr != "")
+                    {
+                        sectionTreeItem = new TreeItem(sessionInfo);
+
+                        sectionTreeItem.TreeItemId = Guid.NewGuid();
+                        sectionTreeItem.TreeItemCode = sectionCodeStr;
+                        sectionTreeItem.TreeItemName = sectionNameStr;
+                        sectionTreeItem.Class = new VMMC_Core.Class(sessionInfo).getClass("TREEITEM");
+                        sectionTreeItem.Parent = pdTreeItem;
+                        treeItemsList.Add(sectionTreeItem);
+                    }
+
+                    if (subsectionCodeStr != "")
+                    {
+                        VMMC_Core.TreeItem subsectionTreeItem = new TreeItem(sessionInfo).getTreeItem(subsectionCodeStr, sectionTreeItem.TreeItemId.ToString());
+                        if (subsectionTreeItem == null)
+                        {
+
+                            subsectionTreeItem = new TreeItem(sessionInfo);
+                            subsectionTreeItem.TreeItemId = Guid.NewGuid();
+                            subsectionTreeItem.TreeItemCode = subsectionCodeStr;
+                            subsectionTreeItem.TreeItemName = subsectionNameStr;
+                            subsectionTreeItem.Class = new VMMC_Core.Class(sessionInfo).getClass("TREEITEM");
+                            subsectionTreeItem.Parent = sectionTreeItem;
+                            treeItemsList.Add(subsectionTreeItem);
+                        }
+                        VMMC_Core.Relationship docSubsection = new Relationship(sessionInfo)
+                        {
+                            RelationshipId = Guid.NewGuid(),
+                            LeftObject = new DbObject(sessionInfo) { ObjectId = subsectionTreeItem.TreeItemId },
+                            RightObject = new DbObject(sessionInfo) { ObjectId = newDoc.DocumentId },
+                            RelTypeId = new Relationship(sessionInfo).GetRelationshipTypeId("Элемент дерева-Документ")
+                        };
+                        relList.Add(docSubsection);
+
+                    }
+                    else if (sectionTreeItem!=null) 
+                    {
+                        VMMC_Core.Relationship docSection = new Relationship(sessionInfo)
+                        {
+                            RelationshipId = Guid.NewGuid(),
+                            LeftObject = new DbObject(sessionInfo) { ObjectId = sectionTreeItem.TreeItemId },
+                            RightObject = new DbObject(sessionInfo) { ObjectId = newDoc.DocumentId },
+                            RelTypeId = new Relationship(sessionInfo).GetRelationshipTypeId("Элемент дерева-Документ")
+                        };
+                        relList.Add(docSection);
+                    }                
+                }
+            }
+
+            excelParserViewModel.DocumentsCollection = docList;
+            excelParserViewModel.RelationshipsCollection = relList;
+            excelParserViewModel.TreeItemsCollection = treeItemsList;
+            excelParserViewModel.AttributeObjectValuesCollection = atrList;
+
+
+            return excelParserViewModel;
+            //DataContext = excelParserViewModel;
+            //Documents_DataGrid.ItemsSource = excelParserViewModel.DocumentsCollection;
+        }
+
         private void GetDocumentsRdTagsRelationshipsFromExcel()
         {
             using (var dialog = new System.Windows.Forms.OpenFileDialog())
@@ -2262,7 +2700,10 @@ namespace VMMC_ExcelParcer
                         }
 
                     }
+                    if (complektCodeStr == "LKMN-0D33-RD-VNPR-WHPT-001-0001-01052") 
+                    {
 
+                    }
                     VMMC_Core.Complekt newComplekt = new VMMC_Core.Complekt(sessionInfo).GetComplekt(complektCodeStr);
                     if (newComplekt == null)
                     {
@@ -2342,9 +2783,14 @@ namespace VMMC_ExcelParcer
                             if (systemTreeItem != null)
                             {
                                 if (complexTreeItem.TreeItemCode == "018" && newComplekt.ComplektCode.IndexOf("LKMN-0D33-RD-VNPR-WHPT-018-") < 0)
-                                    break;
+                                {
+                                    //break;
+                                }
+
                                 else if (complexTreeItem.TreeItemCode != "018" && newComplekt.ComplektCode.IndexOf("LKMN-0D33-RD-VNPR-WHPT-018-") >= 0)
-                                    break;
+                                {
+                                    //break;
+                                }
                                 else
                                 {
                                     treeItemsList.Add(systemTreeItem);

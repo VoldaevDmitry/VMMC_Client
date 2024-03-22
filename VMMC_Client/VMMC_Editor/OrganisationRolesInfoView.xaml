@@ -24,6 +24,9 @@
                     <DataGridCheckBoxColumn Header="Поставщик" Binding="{Binding IsSupplier, UpdateSourceTrigger=PropertyChanged}" Width="*" />
                     <DataGridCheckBoxColumn Header="Стройконтроль" Binding="{Binding IsControl, UpdateSourceTrigger=PropertyChanged}" Width="*" />
                     <DataGridCheckBoxColumn Header="СМР" Binding="{Binding IsSMR, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridCheckBoxColumn Header="Разработчик рабочей документации" Binding="{Binding IsWDDeveloper, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridCheckBoxColumn Header="Проектировщик" Binding="{Binding IsDesigner, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridCheckBoxColumn Header="Ответственный по поставке" Binding="{Binding IsDeliveryResponsible, UpdateSourceTrigger=PropertyChanged}" Width="*" />
                     <DataGridTemplateColumn Header="Очистить" Width="*" Visibility="Hidden">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

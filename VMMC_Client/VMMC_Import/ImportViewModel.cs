@@ -292,11 +292,14 @@ namespace VMMC_Import
                 ObservableCollection<VMMC_Core.Revision> resultCollection = new ObservableCollection<Revision>();
                 foreach (var doc in DocumentsCollection)
                 {
-                    if (doc.Revisions != null)
+                    if (doc != null)
                     {
-                        foreach (VMMC_Core.Revision rev in doc.Revisions)
+                        if (doc.Revisions != null)
                         {
-                            resultCollection.Add(rev);
+                            foreach (VMMC_Core.Revision rev in doc.Revisions)
+                            {
+                                resultCollection.Add(rev);
+                            }
                         }
                     }
                 }
@@ -313,15 +316,18 @@ namespace VMMC_Import
                 ObservableCollection<VMMC_Core.Files> resultCollection = new ObservableCollection<VMMC_Core.Files>();
                 foreach (var doc in DocumentsCollection)
                 {
-                    if (doc.Revisions != null)
+                    if (doc != null)
                     {
-                        foreach (VMMC_Core.Revision rev in doc.Revisions)
+                        if (doc.Revisions != null)
                         {
-                            if (rev.Files != null)
+                            foreach (VMMC_Core.Revision rev in doc.Revisions)
                             {
-                                foreach (VMMC_Core.Files file in rev.Files)
+                                if (rev.Files != null)
                                 {
-                                    resultCollection.Add(file);
+                                    foreach (VMMC_Core.Files file in rev.Files)
+                                    {
+                                        resultCollection.Add(file);
+                                    }
                                 }
                             }
                         }
@@ -497,15 +503,18 @@ namespace VMMC_Import
             ObservableCollection<VMMC_Core.Document> dbDocCollection = new VMMC_Core.Document(sessionInfo).GetDbDocumentsList();
             foreach (VMMC_Core.Document doc in DocumentsCollection)
             {
-                VMMC_Core.Document dbDoc = dbDocCollection.Where(x => x.DocumentCode == doc.DocumentCode).FirstOrDefault();
-                if (dbDoc != null)
+                if (doc != null)
                 {
-                    ChangeDocGuid(doc.DocumentId, dbDoc.DocumentId);
-                    doc.DocumentName = dbDoc.DocumentName;
-                    doc.DocumentCode = dbDoc.DocumentCode;
-                    doc.DocumentClassId = dbDoc.DocumentClassId;
-                    doc.StatusInfo = "документ существует в БД";
-                    doc.IsExistInDB = true;
+                    VMMC_Core.Document dbDoc = dbDocCollection.Where(x => x.DocumentCode == doc.DocumentCode).FirstOrDefault();
+                    if (dbDoc != null)
+                    {
+                        ChangeDocGuid(doc.DocumentId, dbDoc.DocumentId);
+                        doc.DocumentName = dbDoc.DocumentName;
+                        doc.DocumentCode = dbDoc.DocumentCode;
+                        doc.DocumentClassId = dbDoc.DocumentClassId;
+                        doc.StatusInfo = "документ существует в БД";
+                        doc.IsExistInDB = true;
+                    }
                 }
             }
         }        

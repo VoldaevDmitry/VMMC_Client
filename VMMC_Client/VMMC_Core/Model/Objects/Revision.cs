@@ -85,7 +85,8 @@ namespace VMMC_Core
 
                         newRevision.RevisionId = Guid.Parse(dr["RevisionId"].ToString());
                         newRevision.DocumentId = Guid.Parse(dr["DocumentId"].ToString());
-                        newRevision.Number = int.Parse(dr["Number"].ToString());
+                        if (dr["Number"].ToString() == "X") newRevision.Number = 0;
+                        else newRevision.Number = int.Parse(dr["Number"].ToString());
                         //newRevision.RevisionDate = DateTime.Parse(dr["RevisionDate"].ToString());
                         newRevision.IsCurrent = (bool)dr["IsCurrent"];
                         newRevision.Status = "Exist";
@@ -124,7 +125,9 @@ namespace VMMC_Core
 
                         newRevision.RevisionId = Guid.Parse(dr["RevisionId"].ToString());
                         newRevision.DocumentId = Guid.Parse(dr["DocumentId"].ToString());
-                        newRevision.Number = int.Parse(dr["Number"].ToString());
+                        if (dr["Number"].ToString() == "X") newRevision.Number = 0;
+                        else newRevision.Number = int.Parse(dr["Number"].ToString());
+                        //newRevision.Number = int.Parse(dr["Number"].ToString());
                         //newRevision.RevisionDate = DateTime.Parse(dr["RevisionDate"].ToString());
                         newRevision.IsCurrent = (bool)dr["IsCurrent"];
                         newRevision.Status = "Exist";

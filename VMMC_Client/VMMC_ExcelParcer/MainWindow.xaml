@@ -22,6 +22,8 @@
                     <MenuItem Header="Выбрать файл реестра тегов..." Command="{Binding GetDocuments3DTagFromExcelCommand}"/>
                     <MenuItem Header="Выбрать файл 2222..." Command="{Binding GetDocumentsRdTagsRelationshipsFromExcelCommand}"/>
                     <MenuItem Header="Выбрать файл реестра тегов D33..." Command="{Binding GetD33TagsFromExcelCommand}"/>
+                    <MenuItem Header="Выбрать файл реестра лотов..." Command="{Binding GetLotsAsComplektsCommand}"/>
+                    <MenuItem Header="Выбрать файл реестра ПД..." Command="{Binding GetDocumentsPDCommand}"/>
                     <MenuItem Header="загрузка из MDR...">
                         <MenuItem Header="Выбрать файл реестра РД из MDR..." Command="{Binding GetDocumentsRdFromMDRExcelCommand}"/>
                         <MenuItem Header="Выбрать файл реестра 3D из MDR..." Command="{Binding GetDocuments3dFromMDRExcelCommand}"/>

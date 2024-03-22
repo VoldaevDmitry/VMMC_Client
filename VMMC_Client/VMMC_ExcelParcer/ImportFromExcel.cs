@@ -146,11 +146,11 @@ namespace VMMC_ExcelParcer
             IWorkbook workbook = null;
             // открываем файл
             FileStream fs = new FileStream(sourceFileNamePath, FileMode.Open, FileAccess.Read);
-            if (sourceFileNamePath.IndexOf(".xlsx") > 0)
+            if (sourceFileNamePath.IndexOf(".xlsx") > 0 || sourceFileNamePath.IndexOf(".XLSX") > 0)
             {// Версия Excel 2007 г.
                 workbook = new XSSFWorkbook(fs);
             }
-            else if (sourceFileNamePath.IndexOf(". xls") > 0) // версия Excel 2003 г.
+            else if (sourceFileNamePath.IndexOf(".xls") > 0) // версия Excel 2003 г.
             {
                 workbook = new HSSFWorkbook(fs);
             }

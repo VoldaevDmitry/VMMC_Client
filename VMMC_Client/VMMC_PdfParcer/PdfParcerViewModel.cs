@@ -683,7 +683,10 @@ namespace VMMC_PdfParcer
                 VMMC_Core.Document document = new VMMC_Core.Document(sessionInfo).GetDocument(DocCode);
                 if (document == null) 
                 {
-                    document = new VMMC_Core.Document(sessionInfo) { DocumentId = Guid.NewGuid(), DocumentCode = DocCode, DocumentName = DocName, DocumentClassId = new VMMC_Core.Class(sessionInfo).getClass(DocumentClass).ClassId };
+                    document = new VMMC_Core.Document(sessionInfo) { DocumentId = Guid.NewGuid(), DocumentCode = DocCode, DocumentName = DocName };
+                    VMMC_Core.Class docClass = new VMMC_Core.Class(sessionInfo).getClass(DocumentClass);
+                    if (docClass == null) document.DocumentClassId = new VMMC_Core.Class(sessionInfo).getClass("DOCUMENT").ClassId;
+                    else document.DocumentClassId = (Guid)docClass.ClassId;
                 }
                 if (document != null)
                 {
