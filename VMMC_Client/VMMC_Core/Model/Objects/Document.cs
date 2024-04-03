@@ -232,6 +232,43 @@ namespace VMMC_Core
 
             return logString;
         }
+        public bool UpdateDocument(string documentCode, string newDocumentName, Guid newDocumentClassId)
+        {
+            string connectionString = sessionInfo.ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open(); // устанавливаем соединение с БД
+                    string sql = @"UPDATE [dbo].[Documents] SET [Name] = @Name, [ClassId] = @ClassId WHERE [Code] = @Code";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Code", documentCode);
+                        cmd.Parameters.AddWithValue("@Name", newDocumentName);
+                        cmd.Parameters.AddWithValue("@ClassId", newDocumentClassId);
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        // Проверяем, была ли операция успешной
+                        if (result > 0)
+                        {
+                            return true; // Данные документа успешно обновлены
+                        }
+                        else
+                        {
+                            return false; // Ошибка при обновлении данных документа
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Обработка исключения
+                    Console.WriteLine("Ошибка при обновлении документа: " + ex.Message);
+                    return false;
+                }
+            }
+        }
 
     }
 
