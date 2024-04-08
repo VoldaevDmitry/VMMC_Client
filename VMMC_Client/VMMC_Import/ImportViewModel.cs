@@ -27,6 +27,16 @@ namespace VMMC_Import
         }
 
 
+        public VMMC_Core.RelayCommand ExecuteListCheckComand
+        {
+            get
+            {
+                return executeListCheckComand ??
+                  (executeListCheckComand = new RelayCommand(obj => { CheckListAsync(true); }));
+            }
+        }
+        private VMMC_Core.RelayCommand executeListCheckComand;
+
         public VMMC_Core.RelayCommand ExecutePDFParserComand
         {
             get
@@ -71,7 +81,7 @@ namespace VMMC_Import
             get
             {
                 return startAsyncImportComand ??
-                  (startAsyncImportComand = new RelayCommand(obj => { ImportAsync(); }));
+                  (startAsyncImportComand = new RelayCommand(obj => { startImportBtnClk(); }));
             }
         }
         private VMMC_Core.RelayCommand startAsyncImportComand;
@@ -361,7 +371,7 @@ namespace VMMC_Import
                 AttributeObjectValueViewModelCollection = excelParserViewModel.AttributeObjectValueViewModelCollection;
                 TagsCollection = excelParserViewModel.TagsCollection;
                 RelationshipsCollection = excelParserViewModel.RelationshipsCollection;
-                CheckListAsync();
+                CheckListAsync(false);
             }
         }        
         private void ExecuteDataBaseParcer()
@@ -407,7 +417,7 @@ namespace VMMC_Import
                         //AttributeObjectValueViewModelCollection.Add(new VMMC_Core.CommonControls.AttributeObjectValueViewModel(aov) { AttributeObjectValue = aov });
                     }
                 }
-                CheckListAsync();
+                CheckListAsync(false);
             }
         }
         private void ExecuteFileParcer()
@@ -458,7 +468,7 @@ namespace VMMC_Import
 
                 RelationshipsCollection = fileParserViewModel.RelationshipsCollection;
 
-                CheckListAsync();
+                CheckListAsync(false);
             }
         }
         private void ExecutePdfParcer()
@@ -482,20 +492,20 @@ namespace VMMC_Import
                 AttributeObjectValueViewModelCollection = pdfParcerViewModel.AttributeObjectValueViewModelCollection;
                 TagsCollection = pdfParcerViewModel.TagsCollection;
                 RelationshipsCollection = pdfParcerViewModel.RelationshipsCollection;
-                CheckListAsync();
+                CheckListAsync(false);
             }
         }
-        public async void CheckListAsync()
+        public async void CheckListAsync(bool loadDataFromDB)
         {           
-            if (DocumentsCollection != null) await Task.Run(() => CheckDocumentCollection());
-            if (RevisionsCollection != null) await Task.Run(() => CheckRevisionCollection());
-            if (ComplektsCollection != null) await Task.Run(() => CheckComplektCollection());
-            if (TagsCollection != null) await Task.Run(() => CheckTagCollection());
-            if (RelationshipsCollection != null) await Task.Run(() => CheckRelationshipCollection());
-            if (FilesCollection != null) await Task.Run(() => CheckFilesCollection(true));
+            if (DocumentsCollection != null) await Task.Run(() => CheckDocumentCollection(loadDataFromDB));
+            if (RevisionsCollection != null) await Task.Run(() => CheckRevisionCollection(loadDataFromDB));
+            if (ComplektsCollection != null) await Task.Run(() => CheckComplektCollection(loadDataFromDB));
+            if (TagsCollection != null) await Task.Run(() => CheckTagCollection(loadDataFromDB));
+            if (RelationshipsCollection != null) await Task.Run(() => CheckRelationshipCollection(loadDataFromDB));
+            if (FilesCollection != null) await Task.Run(() => CheckFilesCollection(loadDataFromDB, true));
 
         }
-        public void CheckDocumentCollection()
+        public void CheckDocumentCollection(bool loadDataFromDB)
         {
             //проверка и объединение документов с одинаковым шифром.
 
@@ -508,17 +518,27 @@ namespace VMMC_Import
                     VMMC_Core.Document dbDoc = dbDocCollection.Where(x => x.DocumentCode == doc.DocumentCode).FirstOrDefault();
                     if (dbDoc != null)
                     {
-                        ChangeDocGuid(doc.DocumentId, dbDoc.DocumentId);
-                        doc.DocumentName = dbDoc.DocumentName;
-                        doc.DocumentCode = dbDoc.DocumentCode;
-                        doc.DocumentClassId = dbDoc.DocumentClassId;
-                        doc.StatusInfo = "документ существует в БД";
                         doc.IsExistInDB = true;
+                        doc.StatusInfo = "Документ существует в БД. ";
+                        ChangeDocGuid(doc.DocumentId, dbDoc.DocumentId);
+                        doc.DocumentCode = dbDoc.DocumentCode;
+                        if (loadDataFromDB)
+                        {
+                            if (doc.DocumentName != dbDoc.DocumentName) doc.StatusInfo += "Указанное наименование отличается от загруженного. ";
+                            doc.DocumentName = dbDoc.DocumentName;
+                            if (doc.DocumentClassId != dbDoc.DocumentClassId) doc.StatusInfo += "Указанный класс отличается от загруженного. ";
+                            doc.DocumentClassId = dbDoc.DocumentClassId;
+                        }
+                        else
+                        {
+                            if (doc.DocumentName != dbDoc.DocumentName) doc.StatusInfo += "Указанное наименование отличается от загруженного. ";
+                            if (doc.DocumentClassId != dbDoc.DocumentClassId) doc.StatusInfo += "Указанный класс отличается от загруженного. ";
+                        }
                     }
                 }
             }
         }        
-        public void CheckRevisionCollection()
+        public void CheckRevisionCollection(bool loadDataFromDB)
         {
             ObservableCollection<VMMC_Core.Revision> dbRevCollection = new VMMC_Core.Revision(sessionInfo).GetDbRevisionsList();
             foreach (VMMC_Core.Revision rev in RevisionsCollection)
@@ -534,7 +554,7 @@ namespace VMMC_Import
                 }
             }
         }
-        public void CheckComplektCollection()
+        public void CheckComplektCollection(bool loadDataFromDB)
         {
             ObservableCollection<VMMC_Core.Complekt> dbComCollection = new VMMC_Core.Complekt(sessionInfo).GetDbComplektsList();
             if(dbComCollection == null) dbComCollection = new ObservableCollection<VMMC_Core.Complekt>();
@@ -552,7 +572,7 @@ namespace VMMC_Import
                 }
             }
         }
-        public void CheckTagCollection()
+        public void CheckTagCollection(bool loadDataFromDB)
         {
             List<VMMC_Core.Tag> dbTagCollection = new VMMC_Core.Tag(sessionInfo).GetDbTagsList();
             foreach (VMMC_Core.Tag tag in TagsCollection)
@@ -573,7 +593,7 @@ namespace VMMC_Import
                 }
             }
         }
-        public void CheckRelationshipCollection()
+        public void CheckRelationshipCollection(bool loadDataFromDB)
         {
             ObservableCollection<VMMC_Core.Relationship> dbRelCollection = new VMMC_Core.Relationship(sessionInfo).GetDbRelationshipsList();
             foreach (VMMC_Core.Relationship rel in RelationshipsCollection)
@@ -593,7 +613,7 @@ namespace VMMC_Import
                 }
             }
         }
-        public void CheckFilesCollection(bool ignoreChecksum)
+        public void CheckFilesCollection(bool loadDataFromDB, bool ignoreChecksum)
         {
             ObservableCollection<VMMC_Core.Files> dbComCollection = new VMMC_Core.Files(sessionInfo).GetDbFiles();
             foreach (VMMC_Core.Files files in FilesCollection)
@@ -705,8 +725,37 @@ namespace VMMC_Import
             }
         }
 
-        private async void ImportAsync()
-        { 
+        private void startImportBtnClk() 
+        {
+            bool isUpdateDBData = false;
+
+            string sMessageBoxText = "Обновить существующие записи в БД?\n\nДА-существующие в БД данные обновятся согласно указанным в списке\n\nНЕТ-будут дозагружены только не существующие в БД данные";
+
+            string sCaption = "My Test Application";
+
+            MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+            MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+            MessageBoxResult rsltMessageBox = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+
+            switch (rsltMessageBox)
+            {
+                case MessageBoxResult.Yes:
+                    ImportAsync(true);
+                    break;
+
+                case MessageBoxResult.No:
+                    ImportAsync(false);
+                    break;
+
+                case MessageBoxResult.Cancel:
+                    /* ... */
+                    break;
+            }
+        }
+
+        private async void ImportAsync(bool isUpdateDBData)
+        {
             if (IsNeedUploadComplekts)
             {
                 await Task.Run(() => ImportComplekts());
@@ -750,6 +799,7 @@ namespace VMMC_Import
                     {
                         if (!complekt.IsExistInDB)
                             complekt.CreateDBComplekt();
+                        else complekt.CreateDBComplekt();
                     }
                 }
             }
@@ -764,6 +814,7 @@ namespace VMMC_Import
                     {
                         if (!document.IsExistInDB)
                             document.CreateDBDocument();
+                        else document.CreateDBDocument();
                     }
                 }
             }
