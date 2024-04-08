@@ -91,7 +91,6 @@
 
                         <StackPanel Grid.Row="1">
                             <Button x:Name="Upload_Button" Content="Начать загрузку" Command="{Binding StartAsyncImportComand}" Margin="5" Width="100"/>
-                            <Button x:Name="GetDBData_Button" Content="Получить данные из БД" Command="{Binding ExecuteListCheckComand}" Margin="5" Width="100"/>
                         </StackPanel>
                     </Grid>
                     <TabControl Grid.Column="0"  TabStripPlacement="Bottom">

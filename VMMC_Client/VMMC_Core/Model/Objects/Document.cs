@@ -232,21 +232,31 @@ namespace VMMC_Core
 
             return logString;
         }
-        public bool UpdateDocument(string documentCode, string newDocumentName, Guid newDocumentClassId)
+
+        public bool UpdateDocument()
         {
             string connectionString = sessionInfo.ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 try
                 {
+                    VMMC_Core.Document existDocument = GetDocument(DocumentCode);
+                    if (existDocument == null)
+                    { }
+                    else
+                    {
+                        logString = "При добавлении новой записи пользователем " + sessionInfo.UserName + " в таблицу Documents, произошла ошибка. Документ с таким же кодом существует в БД";
+                        Status = "Error";
+                        StatusInfo = logString;
+                    }
                     conn.Open(); // устанавливаем соединение с БД
                     string sql = @"UPDATE [dbo].[Documents] SET [Name] = @Name, [ClassId] = @ClassId WHERE [Code] = @Code";
 
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@Code", documentCode);
-                        cmd.Parameters.AddWithValue("@Name", newDocumentName);
-                        cmd.Parameters.AddWithValue("@ClassId", newDocumentClassId);
+                        cmd.Parameters.AddWithValue("@Code", DocumentCode);
+                        cmd.Parameters.AddWithValue("@Name", DocumentName);
+                        cmd.Parameters.AddWithValue("@ClassId", DocumentClassId);
 
                         int result = cmd.ExecuteNonQuery();
 
