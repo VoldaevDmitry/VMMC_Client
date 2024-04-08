@@ -814,7 +814,7 @@ namespace VMMC_Import
                     {
                         if (!document.IsExistInDB)
                             document.CreateDBDocument();
-                        else document.CreateDBDocument();
+                        else document.UpdateDocument();
                     }
                 }
             }

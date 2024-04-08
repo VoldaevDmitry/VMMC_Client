@@ -233,49 +233,62 @@ namespace VMMC_Core
             return logString;
         }
 
-        public bool UpdateDocument()
+        public string UpdateDocument()
         {
+
+            string logString = "";
+            string innerException = "";
+            string stackTrace = "";
+            string errorType = "";
+
             string connectionString = sessionInfo.ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 try
                 {
                     VMMC_Core.Document existDocument = GetDocument(DocumentCode);
-                    if (existDocument == null)
-                    { }
+                    if (existDocument != null)
+                    {
+                        conn.Open(); // устанавливаем соединение с БД
+                        string sql = @"UPDATE [dbo].[Documents] SET [Name] = @Name, [ClassId] = @ClassId WHERE [Code] = @Code";
+
+                        using (SqlCommand cmd = new SqlCommand(sql, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@Code", DocumentCode);
+                            cmd.Parameters.AddWithValue("@Name", DocumentName);
+                            cmd.Parameters.AddWithValue("@ClassId", DocumentClassId);
+
+                            int result = cmd.ExecuteNonQuery();
+
+                            // Проверяем, была ли операция успешной
+                            if (result > 0)
+                            {
+                                logString = "Пользователь " + sessionInfo.UserName + " изменил запись в таблице Documents. Guid записи: [" + DocumentId.ToString() + "]";
+                                return logString; // Данные документа успешно обновлены
+                            }
+                            else
+                            {
+                                logString = "При изменении записи пользователем " + sessionInfo.UserName + " в таблице Documents, произошла непредвиденная ошибка.";
+                                return logString; // Ошибка при обновлении данных документа
+                            }
+                        }
+                    }
                     else
                     {
-                        logString = "При добавлении новой записи пользователем " + sessionInfo.UserName + " в таблицу Documents, произошла ошибка. Документ с таким же кодом существует в БД";
+                        logString = "При изменении записи пользователем " + sessionInfo.UserName + " в таблице Documents, произошла ошибка. Документ с таким же кодом не существует в БД";
                         Status = "Error";
                         StatusInfo = logString;
                     }
-                    conn.Open(); // устанавливаем соединение с БД
-                    string sql = @"UPDATE [dbo].[Documents] SET [Name] = @Name, [ClassId] = @ClassId WHERE [Code] = @Code";
 
-                    using (SqlCommand cmd = new SqlCommand(sql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Code", DocumentCode);
-                        cmd.Parameters.AddWithValue("@Name", DocumentName);
-                        cmd.Parameters.AddWithValue("@ClassId", DocumentClassId);
 
-                        int result = cmd.ExecuteNonQuery();
-
-                        // Проверяем, была ли операция успешной
-                        if (result > 0)
-                        {
-                            return true; // Данные документа успешно обновлены
-                        }
-                        else
-                        {
-                            return false; // Ошибка при обновлении данных документа
-                        }
-                    }
+                    return logString;
                 }
                 catch (Exception ex)
                 {
                     // Обработка исключения
-                    Console.WriteLine("Ошибка при обновлении документа: " + ex.Message);
-                    return false;
+                    logString = "При изменении записи пользователем " + sessionInfo.UserName + " в таблице Documents, произошла ошибка. " + ex.Message;
+                    //Console.WriteLine("Ошибка при обновлении документа: " + ex.Message);
+                    return logString;
                 }
             }
         }
